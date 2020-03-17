@@ -2,14 +2,14 @@
   <div id="login-form">
     <h1>CCreator Login</h1>
     <mat-form-field class="login-input">
-        <mat-label>Username</mat-label>
-        <input matInput placeholder="Enter your username here...">
+      <mat-label>E-mail</mat-label>
+      <input matInput [(ngModel)]="email" placeholder="Enter your email here...">
     </mat-form-field>
     <br>
     <mat-form-field class="login-input">
-        <mat-label>Password</mat-label>
-        <input matInput placeholder="Enter your password here...">
-      </mat-form-field>
-    <button mat-stroked-button>Login</button>
+      <mat-label>Password</mat-label>
+      <input type="password" matInput [(ngModel)]="password" placeholder="Enter your password here...">
+    </mat-form-field>
+    <button mat-stroked-button (click)="login()">Login</button>
   </div>
 </div>
