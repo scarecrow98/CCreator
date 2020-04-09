@@ -15,12 +15,6 @@ export class AccountService {
     return this.http.post<ApiResponse>('/account/login', { email, password });
   }
 
-  pageTest(appSlug: string) {
-    this.http.post('/app/page-test', { 'app-slug': appSlug }).subscribe(resp => {
-      console.log(resp);
-    });
-  }
-
   isAuthenticated(): Observable<ApiResponse> {
     return this.http.get<ApiResponse>('/account/isAuthenticated');
   }

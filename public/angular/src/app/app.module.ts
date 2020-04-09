@@ -12,11 +12,14 @@ import { ApiInterceptor } from './shared/api-interceptor';
 //custom modules
 import { MaterialModule } from './material/material.module';
 import { PagesModule } from './pages/pages.module';
+import { MainModule } from './main/main.module';
+import { EditorModule } from './editor/editor.module';
 import { AuthGuardService } from './shared/auth-guard.service';
+
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
@@ -25,6 +28,8 @@ import { AuthGuardService } from './shared/auth-guard.service';
     HttpClientModule,
     MaterialModule,
     PagesModule,
+    MainModule,
+    EditorModule
   ],
   providers: [
     AuthGuardService,

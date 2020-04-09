@@ -20,28 +20,35 @@ class AppDbMiddleware
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
-    {
-        if ($request->has('app-slug')) {
-            $app_slug = $request->input('app-slug');
-            $app_data = DB::connection('mysql')
-                        ->table('applications')
-                        ->where('slug', $app_slug)
-                        ->first();
-            if ($app_data === null) {
-                return response()->json([
-                    'status'    => false,
-                    'data'      => [],
-                    'message'   => 'no app'
-                ]);
-            }
+    public function handle($req, Closure $next)
+    {   
+        $app_slug = $req->header('AppSlug');
 
-            config([
-                'database.connections.app-mysql.host'      => $app_data->host,
-                'database.connections.app-mysql.database'  => $app_data->db_name
+        if ($app_slug === null || $app_slug === '') {
+            return response()->json([
+                'status'    => false,
+                'data'      => [],
+                'message'   => 'No app slug provided' 
             ]);
         }
 
-        return $next($request);
+        $app_data = DB::connection('mysql')
+                    ->table('applications')
+                    ->where('slug', $app_slug)
+                    ->first();
+        if ($app_data === null) {
+            return response()->json([
+                'status'    => false,
+                'data'      => [],
+                'message'   => 'No app with the provided slug'
+            ]);
+        }
+
+        config([
+            'database.connections.app-mysql.host'      => $app_data->host,
+            'database.connections.app-mysql.database'  => $app_data->db_name
+        ]);
+
+        return $next($req);
     }
 }

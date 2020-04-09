@@ -25,6 +25,23 @@ $router->group(['prefix' => 'account'], function() use($router) {
     $router->get('isAuthenticated', 'AccountController@isAuthenticated');
 });
 
-$router->group(['prefix' => 'app', 'middleware' => 'auth'], function() use($router) {
-    $router->post('/page-test', 'TestController@pageTest');    
+$router->group(['prefix' => 'dashboard', 'middlewate' => 'auth'], function() use($router) {
+    $router->get('getApps', 'DashboardController@getApps');
+});
+
+$router->group(['prefix' => 'app', 'middleware' => ['auth', 'appDb']], function() use($router) {
+    //page
+    $router->get('/page/getPages', 'PageController@getPages');
+    $router->post('/page/getPage', 'PageController@getPage');
+    $router->post('page/savePage', 'PageController@savePage');
+
+    //app
+    $router->get('/getAppData', 'ApplicationController@getAppData');
+
+
+    //widget
+    $router->get('/widget/getWidgetTypes', 'WidgetController@getWidgetTypes');
+
+    //record
+    $router->post('/record/getRecord', 'RecordController@getRecord');
 });

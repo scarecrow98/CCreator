@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AccountService } from 'src/app/services/account.service';
+import { PageService } from 'src/app/services/page.service';
+import { Application } from 'src/app/models/Application';
+import { Page } from 'src/app/models/Page';
+import { AppService } from 'src/app/services/app.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-running-app',
@@ -9,14 +12,23 @@ import { AccountService } from 'src/app/services/account.service';
 })
 export class RunningAppComponent implements OnInit {
 
-  public appSlug: string = '';
+  public application: Application;
+  public pages: Array<Page>;
 
-  constructor(private route: ActivatedRoute, private accountService: AccountService, private router: Router) { }
+  constructor(
+    private pageService: PageService,
+    private appService: AppService,
+    public router: Router) { }
 
   ngOnInit() {
-    this.appSlug = this.route.snapshot.params['app-slug'];
+    this.pageService.getPages().subscribe(resp => {
+      this.pages = <Array<Page>>resp.data;
+    });
 
-    this.accountService.pageTest(this.appSlug);
+    this.appService.getAppData().subscribe(resp => {
+      this.application = <Application>resp.data;
+    });
+
   }
 
 }

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { LoaderService } from './services/loader.service';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +10,7 @@ import { Router } from '@angular/router';
 export class AppComponent {
   title = 'angular';
 
-  public constructor(private router: Router) {
+  public constructor(private router: Router, private loaderService: LoaderService) {
 
   }
 }

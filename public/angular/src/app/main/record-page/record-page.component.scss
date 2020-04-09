@@ -1,0 +1,12 @@
+#record-page-content {
+    padding: 20px;
+
+    #record-viewport {
+        background-color: #fff;
+        width: 100%;
+        height: calc(100vh - 95px);
+        overflow-y: scroll;
+        overflow-x: scroll;
+        position: relative;
+    }
+}

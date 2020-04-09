@@ -1,10 +1,19 @@
-<div id="app">
-    <aside id="app-sidebar">
-        ez itt egy menü lesz
-        <!-- ide jön majd az oldalmenü komponens -->
-    </aside>
+<div id="app" [ngClass]="{
+    'no-sidebar': router.url.includes('page/edit/')
+}">
+    <ng-container>
+        <aside id="app-sidebar">
+            <ul>
+                <li *ngFor="let page of pages">
+                    <a [routerLink]="'page/' + page.id">
+                        <mat-icon>toc</mat-icon>
+                        <span>{{ page.title }}</span>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+    </ng-container>
     <main id="app-content">
-        ez itt a {{ appSlug }} alkalmazás
         <router-outlet></router-outlet>
     </main>
 </div>
