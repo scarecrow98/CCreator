@@ -3,13 +3,46 @@
     height: 100vh;
     width: 100%;
     grid-template-columns: 200px 1fr;
+
+    &.no-sidebar {
+        grid-template-columns: 0px 1fr;
+    }
 }
 
 #app-sidebar {
     height: 100%;
-    background-color: blue;
+    background-color: #384fab;
+    // dark: #28397d
+
+    ul {
+        width: 100%;
+        padding: 0px;
+
+        li {
+            display: block;
+            list-style-type: none;
+
+            a {
+                text-decoration: none;
+                color: #fff;
+                display: block;
+                padding: 10px 25px;
+                &:hover {
+                cursor: pointer;
+
+                    background-color: #28397d;
+                }
+
+                mat-icon {
+                    vertical-align: middle;
+                }
+            }
+        }
+    }
 }
 
 #app-content {
-
+    padding: 0px;
+    background-color: #e1eaed;
+    height: 100vh;
 }

@@ -1,14 +1,25 @@
-import { HttpInterceptor } from '@angular/common/http';
+import { HttpInterceptor, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, ActivatedRouteSnapshot, Router } from '@angular/router';
+import { LoaderService } from '../services/loader.service';
+import { tap, catchError } from 'rxjs/operators';
 
 @Injectable()
 export class ApiInterceptor implements HttpInterceptor {
+    /**
+     * Lumen API címe
+     */
     private apiUrl: string = 'http://localhost:8000';
 
-    constructor(private route: ActivatedRoute) { }
+    /**
+     * Elküldött, de még vissza nem érkezett kérések száma.
+     * LoaderService-nek kell.
+     */
+    private pendingRequests: number = 0;
+
+    constructor(private router: Router, private loaderService: LoaderService) { }
 
     /**
      * override metódus
@@ -20,6 +31,11 @@ export class ApiInterceptor implements HttpInterceptor {
      */
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
+        //url-nől kiszedem az app azonosítót, amit elküldök header-ben a szervernek
+        //hogy tudja, melyik adatbázishoz kell csatlakozzon
+        const appSlug = this.extractAppSlug();
+
+
         //berakom a JWT tokent a kérés fejlécébe, az Authorization header-be
         const jwtToken = localStorage.getItem('jwt-token') || '';
 
@@ -28,11 +44,42 @@ export class ApiInterceptor implements HttpInterceptor {
         request = request.clone({
             url: this.apiUrl + request.url,
             setHeaders: {
-                Authorization: 'Bearer ' + jwtToken
+                Authorization: 'Bearer ' + jwtToken,
+                AppSlug: appSlug
             }
         });
 
-        return next.handle(request);
+        this.pendingRequests++;
+        this.loaderService.setLoading(true);
+
+        return next.handle(request).pipe(
+            tap(res => {
+                if (res instanceof HttpResponse) {
+                    this.decreasePendingRequests();
+                }
+            }),
+            catchError(err => {
+                this.decreasePendingRequests();
+                throw err;
+            })
+        );
+    }
+
+    extractAppSlug(): string {
+        const path = window.location.pathname; //pl.: app/test/...
+        const parts = path.substring(1).split('/');
+
+        if (parts.length >= 2) {
+            return parts[1];
+        }
+        return '';
+    }
+
+    decreasePendingRequests(): void {
+        this.pendingRequests--;
+        if (this.pendingRequests) {
+            this.loaderService.setLoading(false);
+        }
     }
 
 }

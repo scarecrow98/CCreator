@@ -23,10 +23,9 @@ BEGIN
 
 	CALL ExecuteQuery(
 		'create table widget_types (
-			id int primary key,
+			id int primary key AUTO_INCREMENT,
 			name varchar(30) not null,
-			display_name varchar(50) not null,
-			icon varchar(30) not null
+			display_name varchar(50) not null
 		)'
 	);
 

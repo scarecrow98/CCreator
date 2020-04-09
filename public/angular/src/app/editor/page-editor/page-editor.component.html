@@ -1,0 +1,101 @@
+<nav class="page-nav">
+    <h1>{{ pageModel.title }}</h1>
+    <span [style.color]="pageModel?.color">asd</span>
+
+    <div class="page-nav-toolbar">
+        <span matTooltip="Oldal mentése" (click)="savePage()">
+            <mat-icon>save</mat-icon>
+        </span>
+        <span matTooltip="Oldalszerkesztő bezárása" (click)="closePageEditor()">
+            <mat-icon>close</mat-icon>
+        </span>
+    </div>
+</nav>
+<div id="editor-area">
+    <aside id="widget-list" class="editor-panel">
+        <h2 class="editor-panel-title">Elérhető widgetek</h2>
+
+        <div id="widget-list-container">
+            <div *ngFor="let type of widgetTypes" class="widget-list-item"
+                [style.backgroundImage]="'url(../../../assets/editor/' + type.name + '.png)'"
+                [matTooltip]="type.display_name" [dndDraggable]="type"></div>
+        </div>
+    </aside>
+
+    <main id="editor-viewport" class="editor-panel" dndDropzone (dndDrop)="newWidgetDropped($event)"
+        (click)="selected = null" #editorViewport>
+
+        <!-- widgetek -->
+
+        <div *ngFor="let widget of pageModel?.widgets" [style.position]="'absolute'" [style.top]="widget.y + 'px'"
+            [style.left]="widget.x + 'px'" cdkDrag (cdkDragEnded)="widgetDragged($event, widget)">
+
+
+            <div class="widget-wrapper">
+                <!-- <mat-icon cdkDragHandle class="widget-drag-handle" matTooltip="Widget mozgatása">
+                    drag_indicator
+                </mat-icon> -->
+
+                <div class="widget-selection-box" [ngClass]="{ 'selected': widget.id == selected?.id }"
+                    (click)="selected = widget; $event.stopPropagation()">
+                    <ng-container dynamicWidget [model]="widget" [disabled]="true"></ng-container>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <aside id="settings" class="editor-panel">
+        <!-- kiválasztott widget adatai -->
+        <section *ngIf="selected">
+
+            <h2 class="editor-panel-title">Widget szerkesztése</h2>
+
+            <mat-form-field>
+                <mat-label>Név</mat-label>
+                <input type="text" matInput [(ngModel)]="selected.label">
+            </mat-form-field>
+
+            <ng-container *ngIf="selected.type == 'textarea'">
+                <mat-checkbox [(ngModel)]="selected.multi_line">
+                    Többsoros szövegdoboz
+                </mat-checkbox>
+            </ng-container>
+
+            <div>
+                <mat-form-field>
+                    <mat-label>X pozíció</mat-label>
+                    <input type="number" matInput [(ngModel)]="selected.x">
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Y pozíció</mat-label>
+                    <input type="number" matInput [(ngModel)]="selected.y">
+                </mat-form-field>
+            </div>
+        </section>
+
+        <!-- oldal adatai -->
+        <section *ngIf="!selected">
+            <h2 class="editor-panel-title">Oldal adatai</h2>
+
+            <div>
+                <label>Létrehozta:</label>
+                <span>{{ pageModel?.created_by?.display_name }}</span>
+                <br>
+                <label>Utoljára módosította:</label>
+                <span>{{ pageModel?.last_modified_by?.display_name }}</span>
+            </div>
+
+            <mat-form-field>
+                <mat-label>Oldal címe</mat-label>
+                <input type="text" matInput [(ngModel)]="pageModel.title">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Szín</mat-label>
+                <input type="color" matInput [(ngModel)]="pageModel.color">
+            </mat-form-field>
+        </section>
+
+
+    </aside>
+</div>

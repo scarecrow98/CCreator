@@ -1,2 +1,6 @@
-<a routerLink="/app/teszt">Katt ide, és elviszlek az alkalmazásba</a><br>
-<a routerLink="/app/teszt-nyilvantarto-app2">Katt ide, és elviszlek az alkalmazásba</a>
+<ng-container *ngFor="let app of apps">
+    <a [routerLink]="'/app/' + app.slug">
+        {{ app.name }}
+    </a>
+    <br>
+</ng-container>

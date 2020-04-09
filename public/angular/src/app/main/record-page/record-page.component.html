@@ -1,0 +1,26 @@
+<nav class="page-nav">
+    <h1>Rekord létrehozása - {{ pageModel?.title }}</h1>
+
+    <div class="page-nav-toolbar">
+        <span matTooltip="Rekord törlése">
+            <mat-icon>delete_sweep</mat-icon>
+        </span>
+        <span matTooltip="Rekord nyomtatása">
+            <mat-icon>print</mat-icon>
+        </span>
+        <span matTooltip="Oldal bezárása" [routerLink]="'../../'">
+            <mat-icon>close</mat-icon>
+        </span>
+    </div>
+</nav>
+<main id="record-page-content">
+    <div id="record-viewport">
+        <div *ngFor="let widget of pageModel?.widgets" [style.position]="'absolute'" [style.top]="widget.y + 'px'"
+            [style.left]="widget.x + 'px'">
+
+            <div class="widget-wrapper">
+                <ng-container dynamicWidget [model]="widget" [disabled]="false"></ng-container>
+            </div>
+        </div>
+    </div>
+</main>
