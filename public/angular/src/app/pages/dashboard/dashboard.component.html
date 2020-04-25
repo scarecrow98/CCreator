@@ -1,6 +1,38 @@
-<ng-container *ngFor="let app of apps">
+<!-- <ng-container *ngFor="let app of apps">
     <a [routerLink]="'/app/' + app.slug">
         {{ app.name }}
     </a>
     <br>
-</ng-container>
+</ng-container> -->
+
+<div class="dashboard">
+    <aside class="dashboard-sidemenu"> 
+        <div class="dash-logo">
+            <a routerLink="/dashboard">
+                <h1>CCreator</h1>
+            </a>
+            <button mat-raised-button (click)="openNewAppDialog()">
+                <mat-icon>add</mat-icon>
+                Új alkalmazás létrehozása
+            </button>
+        </div>
+    </aside>
+    <main class="dashboard-content">
+        <div class="dashboard-app-list">
+            <div *ngFor="let app of apps" class="app-box">
+                <h2 class="app-box-title">{{ app.name }}</h2>
+                <p class="app-box-description">{{ app.description }}</p>
+                <div class="app-box-buttons">
+                    <a class="app-box-play" [routerLink]="'/app/' + app.slug">
+                        <span>Indítás</span>
+                        <mat-icon>play_arrow</mat-icon>
+                    </a>
+
+                    <mat-icon class="app-box-edit" matTooltip="Alkalmazás szerkesztése">edit</mat-icon>
+                    <mat-icon class="app-box-delete" matTooltip="Alkalmazás törlése" (click)="initDeleteApp(app)">delete</mat-icon>
+                </div>
+
+            </div>
+        </div>
+    </main>
+</div>

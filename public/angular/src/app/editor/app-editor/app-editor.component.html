@@ -1,0 +1,28 @@
+<h1 mat-dialog-title>Alkalmazás létrehozása</h1>
+<mat-dialog-content>
+    <div class="app-create-form">
+        <div class="app-create-field">
+            <mat-form-field>
+                <mat-label>Alkalmazás neve</mat-label>
+                <input matInput type="text" [(ngModel)]="appModel.name" (change)="createSlug()">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Alkalmazás azonosítója</mat-label>
+                <input matInput disabled type="text" [(ngModel)]="appModel.slug">
+            </mat-form-field>
+        </div>
+        <div class="app-create-field">
+            <mat-form-field>
+                <mat-label>Leírás</mat-label>
+                <textarea matInput rows="5" [(ngModel)]="appModel.description"></textarea>
+            </mat-form-field>
+        </div>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-stroked-button (click)="createApp()">
+        <mat-icon>save</mat-icon>
+        Alkalmazás létrehozása
+    </button>
+    <button mat-button mat-dialog-close>Mégse</button>
+</mat-dialog-actions>

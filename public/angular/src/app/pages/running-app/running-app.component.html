@@ -3,14 +3,45 @@
 }">
     <ng-container>
         <aside id="app-sidebar">
-            <ul>
-                <li *ngFor="let page of pages">
-                    <a [routerLink]="'page/' + page.id">
-                        <mat-icon>toc</mat-icon>
-                        <span>{{ page.title }}</span>
-                    </a>
-                </li>
-            </ul>
+
+            <div class="app-info">
+                <div class="app-info-image" [style.backgroundImage]="'url(https://picsum.photos/300/300)'"></div>
+                <h1 class="app-info-name">{{ application?.name }}</h1>
+                <span class="app-info-current-user">Belépve mint: {{ appUser?.display_name }}</span>
+            </div>
+                    
+
+            <section class="nav-section">
+                <h2 class="nav-section-title">Profil</h2>
+                <div class="nav-item">
+                    <mat-icon>perm_identity</mat-icon>
+                    <span>Profilbeállítások</span>
+                </div>
+            </section>
+
+            <section class="nav-section">
+                <h2 class="nav-section-title">Alkalmazás</h2>
+
+                <div class="nav-item" *ngFor="let page of pages" [routerLink]="'page/' + page.id">
+                    <mat-icon>list</mat-icon>
+                    <span>{{ page.title }}</span>
+                </div>
+            </section>
+
+            
+            <section class="nav-section">
+                <h2 class="nav-section-title">Egyéb</h2>
+
+                <div class="nav-item" [routerLink]="'/dashboard'">
+                    <mat-icon>home</mat-icon>
+                    <span>Dashboard</span>
+                </div>
+                <div class="nav-item" [routerLink]="'/logout'">
+                    <mat-icon>logout</mat-icon>
+                    <span>Kijelentkezés</span>
+                </div>
+            </section>
+
         </aside>
     </ng-container>
     <main id="app-content">

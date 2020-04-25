@@ -11,4 +11,7 @@ class WidgetType extends Model {
     protected $table = 'widget_types';
     protected $connection = 'app-mysql';
     public $timestamps = false;
+    protected $fillable =  [
+        'name', 'display_name'
+    ];
 }

@@ -1,0 +1,61 @@
+<div class="cc-table">
+    <div class="cc-table-data">
+        <div class="cc-table-row cc-header-row">
+            <div class="cc-row-actions cc-table-cell">
+                
+            </div>
+
+            <div *ngFor="let header of pageModel?.widgets" class="cc-table-header-cell cc-table-cell" >{{ header.label }}</div>
+        </div>
+
+        <div class="cc-table-row cc-data-row" *ngFor="let record of _tableModel?.records">
+            <div class="cc-row-actions cc-table-cell">
+                <mat-icon matTooltip="Rekord szerkeszőt megnyitása" *ngIf="!record.parent_record_id" (click)="openRecordPage(record.id, record.parent_record_id)">edit</mat-icon>
+                <mat-icon matTooltip="Rekord szerkeszőt megnyitása" *ngIf="record.parent_record_id" (click)="openRecordPage(record.id, record.parent_record_id)">edit</mat-icon>
+
+                <mat-icon matTooltip="Rekord törlése" (click)="initDeleteRecord()">delete</mat-icon>
+                <mat-icon matTooltip="Kapcsolódó oldalak" [matMenuTriggerFor]="childPagesMenu" *ngIf="pageModel?.child_pages.length > 0">account_tree</mat-icon>
+            </div>
+
+            <div *ngFor="let widget of record.widgets" class="cc-table-cell cc-data-cell">{{ widget.widget_value }}</div>
+        
+            <mat-menu #childPagesMenu="matMenu">
+                <button mat-menu-item *ngFor="let childPage of pageModel?.child_pages" [routerLink]="'../../page/' + childPage.id + '/parent-record/' + record.id">
+                    <mat-icon>list</mat-icon>
+                    <span>{{ childPage.title }}</span>
+                </button>
+            </mat-menu>
+        </div>
+    </div>
+
+    <div class="cc-table-paginator">
+        <div class="cc-paginator-info">
+            Összesen: {{ _tableModel.total }} rekord
+        </div>
+        
+        <div class="cc-page-size">
+            <mat-form-field>
+                <mat-label>Oldalméret</mat-label>
+                <mat-select [(ngModel)]="currentPageSize" (selectionChange)="paginatorChangedHandler($event)">
+                    <mat-option *ngFor="let pageSize of pageSizes" [value]="pageSize">{{ pageSize }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="cc-page-number">
+            <mat-form-field>
+                <mat-label>Oldalszám</mat-label>
+                <mat-select [(ngModel)]="currentPageNumber" (selectionChange)="paginatorChangedHandler($event)">
+                    <mat-option *ngFor="let pageNumber of pageNumbers" [value]="pageNumber">{{ pageNumber }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="cc-page-arrows">
+            <mat-icon class="prev-page" matTooltip="Előző rekord"
+            (click)="prevRecordPage()" [class.disabled]="currentPageNumber == 1">chevron_left</mat-icon>
+
+            <mat-icon class="next-page" matTooltip="Következő rekord"
+            (click)="nextRecordPage()" [class.disabled]="currentPageNumber == pageCount">chevron_right</mat-icon>
+        </div>
+    </div>
+
+</div>

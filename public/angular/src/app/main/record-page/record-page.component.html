@@ -1,9 +1,15 @@
 <nav class="page-nav">
-    <h1>Rekord létrehozása - {{ pageModel?.title }}</h1>
+    <h1>Rekord {{ recordModel?.id == -1 ? ' létrehozása' : ' szerkesztése' }} - {{ pageModel?.title }}</h1>
 
     <div class="page-nav-toolbar">
-        <span matTooltip="Rekord törlése">
+        <span matTooltip="Rekord mentése" class="btn-save-record" (click)="saveRecord()">
+            <mat-icon>save</mat-icon>
+        </span>
+        <span matTooltip="Rekord törlése" class="btn-delete-record">
             <mat-icon>delete_sweep</mat-icon>
+        </span>
+        <span matTooltip="Információ" [matMenuTriggerFor]="recordInfoMenu">
+            <mat-icon>info</mat-icon>
         </span>
         <span matTooltip="Rekord nyomtatása">
             <mat-icon>print</mat-icon>
@@ -11,14 +17,41 @@
         <span matTooltip="Oldal bezárása" [routerLink]="'../../'">
             <mat-icon>close</mat-icon>
         </span>
+
+        <!-- rekord info lenyilója -->
+        <mat-menu #recordInfoMenu="matMenu" xPosition="before" class="asd">
+            <div mat-menu-item class="record-info-row">
+                <mat-icon>person</mat-icon>
+                <span>Létrehozta: </span>
+                <span>{{ recordModel?.created_by?.display_name }}</span>
+            </div>
+            <div mat-menu-item class="record-info-row">
+                <mat-icon>date_range</mat-icon>
+                <span>Létrehozva ekkor: </span>
+                <span>{{ recordModel?.created_at | date:'yyyy.MM.dd HH:mm:ss' }}</span>
+            </div>
+            <div mat-menu-item class="record-info-row">
+                <mat-icon>person</mat-icon>
+                <span>Utoljára modosította: </span>
+                <span>{{ recordModel?.last_modified_by?.display_name }}</span>
+            </div>
+            <div mat-menu-item class="record-info-row">
+                <mat-icon>date_range</mat-icon>
+                <span>Utoljára módosítva ekkor: </span>
+                <span>{{ recordModel?.last_modified_at | date:'yyyy.MM.dd HH:mm:ss' }}</span>
+            </div>
+        </mat-menu>
     </div>
 </nav>
 <main id="record-page-content">
     <div id="record-viewport">
-        <div *ngFor="let widget of pageModel?.widgets" [style.position]="'absolute'" [style.top]="widget.y + 'px'"
+        <div *ngFor="let widget of recordModel?.widgets" [style.position]="'absolute'" [style.top]="widget.y + 'px'"
             [style.left]="widget.x + 'px'">
 
             <div class="widget-wrapper">
+                <mat-icon class="widget-notif-icon nonexistent-value" *ngIf="!widget.value_exists"
+                    matTooltip="Ezen mező értéke nem létezik az adatbázisban, így alapértelmezett értéket használ.">error</mat-icon>
+
                 <ng-container dynamicWidget [model]="widget" [disabled]="false"></ng-container>
             </div>
         </div>

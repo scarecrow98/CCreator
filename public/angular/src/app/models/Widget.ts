@@ -1,3 +1,6 @@
+import { WidgetType } from './WidgetType';
+import { SelectOption } from './SelectOption';
+
 export class Widget {
     id: number = -1;
     page_id: number = -1;
@@ -6,8 +9,14 @@ export class Widget {
     default_value: string = '';
     x: number = 0;
     y: number = 0;
-    type: string = '';
+    widget_type: WidgetType = null;
     multi_line: boolean = false;
+    options: Array<SelectOption> = [];
 
-    persisted: boolean = false;
+    widget_value: string = null;
+    value_exists: boolean = false;
+
+    saved_x: number = 0;
+    saved_y: number = 0;
+    deleted: boolean = false;
 }

@@ -35,6 +35,21 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
                 cursor: pointer;
                 background-color: #e1e1e1;
             }
+
+            &.btn-save-record {
+                background: #4dd6af;
+                color: #fff;
+            }
+
+            &.btn-delete-record {
+                background: #f07878;
+                color: #fff;
+            }
         }
     }
+}
+
+.widget-error {
+    font-size: 13px;
+    color: red
 }

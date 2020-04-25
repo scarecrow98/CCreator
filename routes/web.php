@@ -23,10 +23,13 @@ $router->get('/test', 'TestController@test');
 $router->group(['prefix' => 'account'], function() use($router) {
     $router->post('login', 'AccountController@login');
     $router->get('isAuthenticated', 'AccountController@isAuthenticated');
+    $router->get('currentGlobalUser', 'AccountController@currentGlobalUser');
 });
 
 $router->group(['prefix' => 'dashboard', 'middlewate' => 'auth'], function() use($router) {
     $router->get('getApps', 'DashboardController@getApps');
+    $router->post('createApp', 'ApplicationController@createApp');
+    $router->post('deleteApp', 'ApplicationController@deleteApp');
 });
 
 $router->group(['prefix' => 'app', 'middleware' => ['auth', 'appDb']], function() use($router) {
@@ -34,14 +37,19 @@ $router->group(['prefix' => 'app', 'middleware' => ['auth', 'appDb']], function(
     $router->get('/page/getPages', 'PageController@getPages');
     $router->post('/page/getPage', 'PageController@getPage');
     $router->post('page/savePage', 'PageController@savePage');
+    $router->post('page/makeRelation', 'PageController@makeRelation');
 
     //app
     $router->get('/getAppData', 'ApplicationController@getAppData');
-
 
     //widget
     $router->get('/widget/getWidgetTypes', 'WidgetController@getWidgetTypes');
 
     //record
-    $router->post('/record/getRecord', 'RecordController@getRecord');
+    $router->post('/record/getRecord', 'PageRecordController@getRecord');
+    $router->post('/record/getRecords', 'PageRecordController@getRecords');
+    $router->post('/record/saveRecord', 'PageRecordController@saveRecord');
+
+    //user
+    $router->get('/user/currentLocalUser', 'AccountController@currentLocalUser');
 });

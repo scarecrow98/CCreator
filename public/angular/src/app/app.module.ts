@@ -15,11 +15,12 @@ import { PagesModule } from './pages/pages.module';
 import { MainModule } from './main/main.module';
 import { EditorModule } from './editor/editor.module';
 import { AuthGuardService } from './shared/auth-guard.service';
+import { ConfirmDialogComponent } from './services/notification.service';
 
 
 @NgModule({
   declarations: [
-    AppComponent,
+    AppComponent, ConfirmDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -35,6 +36,9 @@ import { AuthGuardService } from './shared/auth-guard.service';
     AuthGuardService,
     { provide: HTTP_INTERCEPTORS, useClass: ApiInterceptor, multi: true }
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [
+    ConfirmDialogComponent
+  ]
 })
 export class AppModule { }

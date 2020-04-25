@@ -2,7 +2,7 @@
     display: grid;
     height: 100vh;
     width: 100%;
-    grid-template-columns: 200px 1fr;
+    grid-template-columns: 260px 1fr;
 
     &.no-sidebar {
         grid-template-columns: 0px 1fr;
@@ -11,8 +11,82 @@
 
 #app-sidebar {
     height: 100%;
-    background-color: #384fab;
+    background-color: #272C4A;
     // dark: #28397d
+
+    .nav-section {
+        margin: 60px 20px 20px 20px;
+
+        .btn-create-button {
+            background-color: #fff;
+            color: #272C4A;
+            padding: 6px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            transform: scale(1.0);
+            transition: all 0.3s ease-in-out;
+
+            &:hover {
+                transform: scale(1.05);
+            }
+        }
+
+        .nav-section-title {
+            border-bottom: 1px solid #6094e0;
+            padding-bottom: 6px;
+            font-size: 16px;
+            color: #4771ad;
+            font-weight: lighter;
+            text-transform: uppercase;
+        }
+
+        .nav-item {
+            color: #fff;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 6px;
+
+            &:hover {
+                background-color: #28397d;
+            }
+
+            mat-icon {
+                margin-right: 10px;
+            }
+        }
+    }
+
+    .app-info {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 30px;
+
+        .app-info-name {
+            color: #fff;
+            font-size: 20px;
+            text-align: center;
+        }
+
+        .app-info-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #fff;
+            background-position: center center;
+            background-size: 80%;
+        }
+
+        .app-info-current-user {
+            color: #fff;
+            font-style: italic;
+        }
+    }
 
     ul {
         width: 100%;

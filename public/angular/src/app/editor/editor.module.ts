@@ -6,9 +6,13 @@ import { DndModule } from 'ngx-drag-drop';
 import { WidgetsModule } from '../widgets/widgets.module';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { FormsModule } from '@angular/forms';
+import { AppEditorComponent } from './app-editor/app-editor.component';
 
 @NgModule({
-  declarations: [PageEditorComponent],
+  declarations: [
+    PageEditorComponent,
+    AppEditorComponent
+  ],
   imports: [
     CommonModule,
     MaterialModule,
@@ -18,7 +22,11 @@ import { FormsModule } from '@angular/forms';
     FormsModule
   ],
   exports: [
-    PageEditorComponent
+    PageEditorComponent,
+    AppEditorComponent
+  ],
+  entryComponents: [
+    AppEditorComponent
   ]
 })
 export class EditorModule { }

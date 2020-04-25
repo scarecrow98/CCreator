@@ -27,21 +27,19 @@
 
         <!-- widgetek -->
 
-        <div *ngFor="let widget of pageModel?.widgets" [style.position]="'absolute'" [style.top]="widget.y + 'px'"
-            [style.left]="widget.x + 'px'" cdkDrag (cdkDragEnded)="widgetDragged($event, widget)">
+        <ng-container *ngFor="let widget of pageModel?.widgets">
+            <div *ngIf="!widget.deleted" style="position: absolute; transform-origin: top left;" [style.top.px]="widget.saved_y"
+            [style.left.px]="widget.saved_x" cdkDrag (cdkDragEnded)="widgetDragged($event, widget)">
 
-
-            <div class="widget-wrapper">
-                <!-- <mat-icon cdkDragHandle class="widget-drag-handle" matTooltip="Widget mozgatása">
-                    drag_indicator
-                </mat-icon> -->
-
-                <div class="widget-selection-box" [ngClass]="{ 'selected': widget.id == selected?.id }"
-                    (click)="selected = widget; $event.stopPropagation()">
-                    <ng-container dynamicWidget [model]="widget" [disabled]="true"></ng-container>
+                <div class="widget-wrapper">
+                    <div class="widget-selection-box" [ngClass]="{ 'selected': widget.id == selected?.id }"
+                        (click)="selected = widget; $event.stopPropagation()">
+                        <ng-container dynamicWidget [model]="widget" [disabled]="true"></ng-container>
+                    </div>
                 </div>
             </div>
-        </div>
+        </ng-container>
+        
 
     </main>
 
@@ -49,52 +47,127 @@
         <!-- kiválasztott widget adatai -->
         <section *ngIf="selected">
 
-            <h2 class="editor-panel-title">Widget szerkesztése</h2>
+            <h2 class="editor-panel-title">
+                Widget szerkesztése
+                <mat-icon matTooltip="Widget törlése az oldalról" (click)="initDeleteWidget(selected)">delete</mat-icon>
+            </h2>
 
             <mat-form-field>
                 <mat-label>Név</mat-label>
                 <input type="text" matInput [(ngModel)]="selected.label">
             </mat-form-field>
 
-            <ng-container *ngIf="selected.type == 'textarea'">
+            <ng-container *ngIf="selected.widget_type.name == 'textarea'">
                 <mat-checkbox [(ngModel)]="selected.multi_line">
                     Többsoros szövegdoboz
                 </mat-checkbox>
             </ng-container>
 
+            <!-- listaelemek legördülőbe -->
             <div>
                 <mat-form-field>
-                    <mat-label>X pozíció</mat-label>
-                    <input type="number" matInput [(ngModel)]="selected.x">
+                    <mat-label>Listaelem hozzáadása</mat-label>
+                    <input type="text" matInput [(ngModel)]="optionValueToAdd">
                 </mat-form-field>
-                <mat-form-field>
-                    <mat-label>Y pozíció</mat-label>
-                    <input type="number" matInput [(ngModel)]="selected.y">
+
+                <button mat-stroked-button (click)="addOptionToSelectedWidget()">Listaelem hozzáadása</button>
+
+                <div>
+                    <ul>
+                        <li *ngFor="let option of selected.options">{{ option.value }}</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- alapértelmezett értékek -->
+            <div>
+                <mat-form-field *ngIf="selected.widget_type.name == 'number'">
+                    <mat-label>Alapértelmezett érték</mat-label>
+                    <input type="number" matInput [(ngModel)]="selected.default_value">
+                </mat-form-field>
+                <mat-form-field *ngIf="selected.widget_type.name == 'textarea'">
+                    <mat-label>Alapértelmezett érték</mat-label>
+                    <input type="text" matInput [(ngModel)]="selected.default_value">
+                </mat-form-field>
+                <mat-form-field *ngIf="selected.widget_type.name == 'date'">
+                    <mat-label>Alapértelmezett érték</mat-label>
+                    <input type="date" matInput [(ngModel)]="selected.default_value">
                 </mat-form-field>
             </div>
         </section>
 
         <!-- oldal adatai -->
-        <section *ngIf="!selected">
-            <h2 class="editor-panel-title">Oldal adatai</h2>
+        <mat-tab-group *ngIf="!selected">
+            <!-- oldal alapadatai -->
+            <mat-tab label="Alapadatok">
 
-            <div>
-                <label>Létrehozta:</label>
-                <span>{{ pageModel?.created_by?.display_name }}</span>
-                <br>
-                <label>Utoljára módosította:</label>
-                <span>{{ pageModel?.last_modified_by?.display_name }}</span>
-            </div>
+                <div>
+                    <label>Létrehozta:</label>
+                    <span>{{ pageModel?.created_by?.display_name }}</span>
+                    <br>
+                    <label>Utoljára módosította:</label>
+                    <span>{{ pageModel?.last_modified_by?.display_name }}</span>
+                </div>
 
-            <mat-form-field>
-                <mat-label>Oldal címe</mat-label>
-                <input type="text" matInput [(ngModel)]="pageModel.title">
-            </mat-form-field>
-            <mat-form-field>
-                <mat-label>Szín</mat-label>
-                <input type="color" matInput [(ngModel)]="pageModel.color">
-            </mat-form-field>
-        </section>
+                <mat-form-field>
+                    <mat-label>Oldal címe</mat-label>
+                    <input type="text" matInput [(ngModel)]="pageModel.title">
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Szín</mat-label>
+                    <input type="color" matInput [(ngModel)]="pageModel.color">
+                </mat-form-field>
+            </mat-tab>
+
+            <!-- oldalhierarchia szerkesztő -->
+            <mat-tab label="Kapcsolódó oldalak">
+                <div class="add-related-page-container">
+                    <mat-form-field>
+                        <mat-label>Alárendelt oldal felvétele</mat-label>
+                        <mat-select [(ngModel)]="relatedPageIdToAdd">
+                            <ng-container *ngFor="let page of pages">
+                                <mat-option *ngIf="canPageBeRelated(page)" [value]="page.id">
+                                    {{ page.title }}
+                                </mat-option>
+                            </ng-container>   
+                        </mat-select> 
+                    </mat-form-field>
+
+                    <button mat-raised-button color="primary" (click)="initAddRelatedPage()">
+                        <mat-icon>add</mat-icon>
+                        Oldal felvétele
+                    </button>
+                </div>
+
+                <div>
+                    <h3>Szülő oldal:</h3>
+                    <span>{{ pageModel?.parent_page?.title }}</span>
+                </div>
+
+                <div>
+                    <h3>Alárendelt oldalak:</h3>
+                    <ul>
+                        <li *ngFor="let page of pageModel?.child_pages">{{ page.title }}</li>
+                    </ul>
+                </div>
+
+
+            </mat-tab>
+
+            <!-- widgetek táblázat beállításai -->
+            <mat-tab label="Widgetek">
+                <h2>Widgetek sorrendje a táblázatban</h2>
+                <div class="widget-table-list">
+                    <div class="widget-table-item" *ngFor="let widget of pageModel?.widgets">
+                        <div class="widget-table-item-name">{{ widget.label }}</div>
+                        <div class="widget-table-item-cb">
+                            <mat-checkbox matTooltip="Látszódjon a táblázatban"></mat-checkbox>
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+
+        </mat-tab-group>
 
 
     </aside>

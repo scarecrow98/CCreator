@@ -31,6 +31,21 @@
         height: calc(100vh - 83px);
         border-left: 1px solid #e1e1e1;
     }
+    
+    .add-related-page-container {
+        padding: 25px 15px;
+        display: flex;
+        align-items: center;
+        
+        mat-form-field {
+            width: 250px;
+        }
+
+        button {
+            margin-left: auto;
+            display: block;
+        }
+    }
 }
 
 #widget-list-container {
@@ -43,7 +58,7 @@
         border-radius: 4px;
         height: 120px;
         background-position: center center;
-        background-size: 70%;
+        background-size: 90px;
         background-repeat: no-repeat;
         box-shadow: 0px;
         transition: box-shadow 0.4s ease-in-out;
@@ -60,6 +75,7 @@
 
     display: flex;
     align-items: center;
+    cursor: pointer;
 
     .widget-selection-box {
         padding: 5px 10px;
@@ -77,3 +93,5 @@
         margin-right: 6px;
     }
 }
+
+

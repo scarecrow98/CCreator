@@ -22,4 +22,8 @@ export class PageService {
   savePage(page: Page): Observable<ApiResponse> {
     return this.http.post<ApiResponse>('/app/page/savePage', { page });
   }
+
+  makePageRelation(parentPageId: number, childPageId: number): Observable<ApiResponse> {
+    return this.http.post<ApiResponse>('/app/page/makeRelation', { parentPageId, childPageId });
+  }
 }

@@ -7,6 +7,9 @@ import { PageService } from 'src/app/services/page.service';
 import { WidgetType } from 'src/app/models/WidgetType';
 import { WidgetService } from 'src/app/services/widget.service';
 import { DynamicWidgetDirective } from 'src/app/widgets/dynamic-widget.directive';
+import { NotificationService } from 'src/app/services/notification.service';
+import { CdkDragEnd } from '@angular/cdk/drag-drop';
+import { SelectOption } from 'src/app/models/SelectOption';
 
 @Component({
   selector: 'app-page-editor',
@@ -18,16 +21,20 @@ export class PageEditorComponent implements OnInit, AfterViewInit {
   @ViewChildren(DynamicWidgetDirective) widgetComponents !: QueryList<DynamicWidgetDirective>;
   @ViewChild('editorViewport', { static: true }) editorViewport: ElementRef;
 
-
+  public pages: Array<Page> = [];
   public pageModel: Page = new Page();
   public widgetTypes: Array<WidgetType>
   public selected: Widget;
   public createMode: boolean;
 
+  public relatedPageIdToAdd: number = null;
+  public optionValueToAdd: string = null;
+
   constructor(
     private route: ActivatedRoute,
     private pageService: PageService,
-    private widgetService: WidgetService
+    private widgetService: WidgetService,
+    private notificationService: NotificationService
   ) { }
 
   ngOnInit() {
@@ -37,24 +44,14 @@ export class PageEditorComponent implements OnInit, AfterViewInit {
 
     if (!this.createMode) {
       const pageId = parseInt(this.route.snapshot.paramMap.get('page-id'));
-      this.pageService.getPage(pageId).subscribe(resp => {
-        if (resp.status) {
-          this.pageModel = <Page>resp.data;
-        } else {
-          console.log(resp.message); //todo
-        }
-      });
+      this.loadPage(pageId);
     }
 
     //elérehető widget típusok lekérése
-    this.widgetService.getWidgetTypes().subscribe(resp => {
-      if (resp.status) {
-        this.widgetTypes = <Array<WidgetType>>resp.data;
-      } else {
-        console.log(resp.message); //todo
-      }
-    });
+    this.loadWidgetTypes();
 
+    //oldalak lekérése
+    this.loadPages();
   }
 
   ngAfterViewInit() {
@@ -71,7 +68,8 @@ export class PageEditorComponent implements OnInit, AfterViewInit {
   savePage(): void {
     this.pageService.savePage(this.pageModel).subscribe(resp => {
       if (resp.status) {
-        this.pageModel = <Page>resp.data
+        const pageId = resp.data.pageId;
+        this.loadPage(pageId);
       } else {
         //todo: error
       }
@@ -89,17 +87,102 @@ export class PageEditorComponent implements OnInit, AfterViewInit {
     const widgetY = $event.event.offsetY;
 
     let widget = new Widget();
-    widget.type = widgetType;
     widget.widget_type_id = widgetTypeId;
-    widget.x = widgetX;
-    widget.y = widgetY;
+    widget.widget_type = { name: widgetType, id: widgetTypeId, display_name: '' }
+    widget.x = widget.saved_x = widgetX;
+    widget.y = widget.saved_y = widgetY;
     widget.id = - (this.pageModel.widgets.length + 1);
     widget.page_id = this.pageModel.id;
     this.pageModel.widgets.push(widget);
   }
 
-  widgetDragged($event: any, widget: Widget): void {
+  widgetDragged($event: CdkDragEnd, widget: Widget): void {
+    console.log(widget);
+    const transformValues = $event.source.element.nativeElement.style.transform.match(/([\-\d]+)px/g)
+    const transformX = parseInt(transformValues[0])
+    const transformY = parseInt(transformValues[1])
+    
+    
+    widget.x = widget.saved_x + transformX;
+    widget.y = widget.saved_y + transformY;
+    // console.log([transformX, transformY], [widget['original_x'], widget['original_y']], [widget.x, widget.y]);
+  }
 
+  canPageBeRelated(page: Page): boolean {
+    return page.id != this.pageModel.id && this.pageModel.child_pages.filter(x => x.id == page.id).length == 0;
+  }
+
+  initAddRelatedPage(): void {
+    if (!this.relatedPageIdToAdd) {
+      this.notificationService.error('Nincs kiválasztva a felvenni kívánt oldal!');
+      return;
+    }
+
+    const page = this.pages.find(x => x.id == this.relatedPageIdToAdd);
+    
+    const msg = `Biztosan fel akarod venni a(z) ${page.title} oldalt alá rendelt oldalként? Azt az oldalt már nem fogod tudni felvenni más oldalak alá!`;
+    this.notificationService.confirm(msg).subscribe(ans => {
+      if (ans === true) {
+        this.addRelatedPage();
+      }
+    });
+  }
+
+  initDeleteWidget(widget: Widget): void {
+    this.notificationService.confirm('Biztosan törölni akarod a widgetet? Az oldal összes rekordjának összes ezen mező beli értéke el fog veszni!').subscribe(ans => {
+      if (ans === true) {
+        widget.deleted = true;
+      }
+    });
+  }
+
+  addOptionToSelectedWidget(): void {
+    if (this.optionValueToAdd == '' || !this.optionValueToAdd) {
+      this.notificationService.error('A listaelem értéke nem lehet üres!');
+      return;
+    }
+    const component = this.widgetComponents.toArray().find(x => x.componentRef.instance.model.id == this.selected.id);
+    component.componentRef.instance.addOption(this.optionValueToAdd);
+  }
+
+  addRelatedPage(): void {
+    const parentPageId = this.pageModel.id;
+    const childPageId = this.relatedPageIdToAdd;
+    this.relatedPageIdToAdd = null;
+
+    this.pageService.makePageRelation(parentPageId, childPageId).subscribe(resp => {
+      if (resp.status) {
+        this.loadPage(this.pageModel.id);
+      }
+    });
+  }
+
+  loadPage(pageId: number): void {
+    this.pageService.getPage(pageId).subscribe(resp => {
+      if (resp.status) {
+        this.pageModel = <Page>resp.data;
+      } else {
+        console.log(resp.message); //todo
+      }
+    });
+  }
+
+  loadWidgetTypes(): void {
+    this.widgetService.getWidgetTypes().subscribe(resp => {
+      if (resp.status) {
+        this.widgetTypes = <Array<WidgetType>>resp.data;
+      } else {
+        console.log(resp.message); //todo
+      }
+    });
+  }
+
+  loadPages(): void {
+    this.pageService.getPages().subscribe(resp => {
+      if (resp.status) {
+        this.pages = <Array<Page>>resp.data;
+      }
+    });
   }
 
 }

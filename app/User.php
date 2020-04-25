@@ -15,6 +15,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     use Authenticatable, Authorizable;
     protected $table = 'users';
     protected $connection = 'mysql';
+    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -39,4 +40,5 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public function getJWTCustomClaims() {
         return [];
     }
+
 }

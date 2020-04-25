@@ -8,6 +8,7 @@ import { AuthGuardService } from './shared/auth-guard.service';
 import { ListPageComponent } from './main/list-page/list-page.component';
 import { PageEditorComponent } from './editor/page-editor/page-editor.component';
 import { RecordPageComponent } from './main/record-page/record-page.component';
+import { LogoutGuard } from './shared/logout.guard';
 
 
 const routes: Routes = [
@@ -20,9 +21,12 @@ const routes: Routes = [
     children: [
       { path: 'page/:page-id', component: ListPageComponent },
       { path: 'page/:page-id/record/:record-id', component: RecordPageComponent },
+      { path: 'page/:page-id/parent-record/:parent-record-id/record/:record-id', component: RecordPageComponent },
+      { path: 'page/:page-id/parent-record/:parent-record-id', component: ListPageComponent },
       { path: 'page/edit/:page-id', component: PageEditorComponent }
     ]
-  }
+  },
+  { path: 'logout', canActivate: [ LogoutGuard ], component: LoginComponent } //todo
 ];
 
 @NgModule({
