@@ -1,4 +1,4 @@
-import { Directive, Input, ComponentFactoryResolver, ViewContainerRef, OnInit } from '@angular/core';
+import { Directive, Input, ComponentFactoryResolver, ViewContainerRef, OnInit, Output } from '@angular/core';
 import { TextareaWidgetComponent } from './components/textarea-widget-component';
 import { SelectWidgetComponent } from './components/select-widget-component';
 import { DateWidgetComponent } from './components/date-widget-component';

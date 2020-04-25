@@ -14,6 +14,14 @@ class Page extends Model {
     ];
     protected $with = ['widgets', 'created_by', 'last_modified_by'];
 
+    public function child_pages() {
+        return $this->hasMany('App\Models\Page', 'parent_page_id', 'id');
+    }
+
+    public function parent_page() {
+        return $this->belongsTo('App\Models\Page', 'parent_page_id', 'id');
+    }
+
     public function widgets() {
         //params: másik model, foreign key, local key
         return $this->hasMany('App\Models\Widget', 'page_id', 'id');
@@ -25,5 +33,9 @@ class Page extends Model {
 
     public function last_modified_by() {
         return $this->belongsTo('App\Models\AppUser', 'last_modified_by', 'id');
+    }
+
+    public function records() {
+        return $this->hasMany('App\Models\PageRecord', 'page_id', 'id');
     }
 }

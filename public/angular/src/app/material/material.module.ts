@@ -11,7 +11,10 @@ import {
   MatDatepickerModule,
   MatNativeDateModule,
   MatCheckboxModule,
-  MatDialogModule
+  MatDialogModule,
+  MatMenuModule,
+  MatSnackBarModule,
+  MatTabsModule
 } from '@angular/material';
 
 
@@ -27,7 +30,10 @@ import {
     MatDatepickerModule,
     MatNativeDateModule,
     MatCheckboxModule,
-    MatDialogModule
+    MatDialogModule,
+    MatMenuModule,
+    MatSnackBarModule,
+    MatTabsModule
   ],
   providers: [
     MatNativeDateModule

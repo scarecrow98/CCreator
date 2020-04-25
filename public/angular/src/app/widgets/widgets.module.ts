@@ -10,6 +10,7 @@ import { DateWidgetComponent } from './components/date-widget-component';
 import { NumberWidgetComponent } from './components/number-widget-component';
 
 import { MaterialModule } from '../material/material.module';
+import { FormsModule } from '@angular/forms'
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { MaterialModule } from '../material/material.module';
   ],
   imports: [
     CommonModule,
-    MaterialModule
+    MaterialModule,
+    FormsModule
   ],
   exports: [
     TextareaWidgetComponent,

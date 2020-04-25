@@ -5,21 +5,28 @@ import { MaterialModule } from '../material/material.module';
 import { RouterModule } from '@angular/router';
 import { RecordPageComponent } from './record-page/record-page.component';
 import { WidgetsModule } from '../widgets/widgets.module';
+import { NgxDatatableModule, DatatableComponent } from '@swimlane/ngx-datatable';
+import { DataTableComponent } from './data-table/data-table.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
     ListPageComponent,
-    RecordPageComponent
+    RecordPageComponent,
+    DataTableComponent
   ],
   imports: [
     CommonModule,
     MaterialModule,
     RouterModule,
-    WidgetsModule
+    WidgetsModule,
+    NgxDatatableModule,
+    FormsModule
   ],
   exports: [
     ListPageComponent,
-    RecordPageComponent
+    RecordPageComponent,
+    DatatableComponent
   ],
   entryComponents: [
     RecordPageComponent

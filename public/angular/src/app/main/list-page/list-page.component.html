@@ -2,20 +2,14 @@
     <h1>{{ page?.title }}</h1>
 
     <div class="page-nav-toolbar">
-        <span matTooltip="Új rekord felvétele" [routerLink]="'../../page/' + page?.id + '/record/1'">
+        <span matTooltip="Új rekord felvétele" (click)="openNewRecordPage()">
             <mat-icon>add</mat-icon>
         </span>
-        <span matTooltip="Új oldal létrehozása" [routerLink]="'../../page/edit/new'">
-            <mat-icon>note_add</mat-icon>
-        </span>
-        <span matTooltip="Oldal szerkesztése" [routerLink]="'../../page/edit/' + page?.id">
+        <span matTooltip="Oldal szerkesztése" (click)="openNewPageEditor()">
             <mat-icon>edit</mat-icon>
         </span>
         <span matTooltip="Oldal nyomtatása">
             <mat-icon>print</mat-icon>
-        </span>
-        <span matTooltip="Oldal bezárása">
-            <mat-icon>close</mat-icon>
         </span>
     </div>
 </nav>
@@ -23,22 +17,12 @@
 
     <!-- ==== táblázat adatokkal - lehet kellene külön komponens neki, ha sok funkciót tud (pl.: szűrés, stb) ==== -->
 
-    <div id="table-data">
-        <table mat-table [dataSource]="data">
-            <ng-container *ngFor="let column of columns" [matColumnDef]="column.key">
-                <th mat-header-cell *matHeaderCellDef>{{ column.displayName }}</th>
-                <td mat-cell *matCellDef="let element">{{ element[column.key] }}</td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
-        </table>
-        <mat-paginator [pageSizeOptions]="[5, 25, 50, 100]" [length]="data.length"></mat-paginator>
+    <div>
+        <ccreator-data-table [tableModel]="tableModel" [pageModel]="page" (paginatorChanged)="reloadTable($event)"></ccreator-data-table>
     </div>
 
 </main>
 
-<div id="new-record-button" matTooltip="Új rekord felvétele">
+<!-- <div id="new-record-button" matTooltip="Új rekord felvétele">
     <mat-icon>add</mat-icon>
-</div>
+</div> -->

@@ -5,9 +5,9 @@ import { Widget } from 'src/app/models/Widget';
 @Component({
     selector: 'number-widget',
     template: `
-        <mat-form-field>
+        <mat-form-field appearance="fill"  floatLabel="always">
             <mat-label>{{ model.label }}</mat-label>
-            <input matInput type="number" [disabled]="disabled">     
+            <input matInput type="number" [disabled]="disabled" [(ngModel)]="model.widget_value">     
         </mat-form-field>
   `,
     styles: []

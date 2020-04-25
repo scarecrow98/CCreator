@@ -18,4 +18,12 @@ export class AccountService {
   isAuthenticated(): Observable<ApiResponse> {
     return this.http.get<ApiResponse>('/account/isAuthenticated');
   }
+
+  currentLocalUser(): Observable<ApiResponse> {
+    return this.http.get<ApiResponse>('/app/user/currentLocalUser');
+  }
+
+  currentGlobalUser(): Observable<ApiResponse> {
+    return this.http.get<ApiResponse>('/account/currentGlobalUser');
+  }
 }

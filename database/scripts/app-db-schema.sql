@@ -12,7 +12,8 @@ create table pages (
     color char(9) not null,
     created_by int not null references users,
     created_at timestamp DEFAULT CURRENT_TIMESTAMP,
-    last_modified_by int references users
+    last_modified_by int references users,
+    parent_page_id int not null references pages
 );
 
 create table widget_types (
@@ -31,7 +32,9 @@ create table page_widgets (
     default_value varchar(1000),
     x int not null default 0,
     y int not null default 0,
-    multi_line tinyint not null default 0
+    multi_line tinyint not null default 0,
+    options json null,
+    table_order int default 0
 );
 
 create table page_relations (
@@ -45,7 +48,8 @@ create table page_records (
     created_by int not null references users,
     created_at timestamp default CURRENT_TIMESTAMP,
     last_modified_by int not null references users,
-    last_modified_at timestamp DEFAULT CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP
+    last_modified_at timestamp DEFAULT CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+    parent_record_id int null references page_records
 );
 
 create table page_record_value (
