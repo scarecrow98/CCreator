@@ -15,11 +15,11 @@ BEGIN
 			title varchar(255) NOT NULL,
 			description varchar(255) NULL,
 			icon varchar(30) NULL,
-			color char(9) not null,
+			color char(9) null,
 			created_by int not null references users,
 			created_at timestamp DEFAULT CURRENT_TIMESTAMP,
 			last_modified_by int references users,
-			parent_page_id int not null references pages
+			parent_page_id int null references pages
 		);')
     );
 

@@ -41,4 +41,9 @@ export class RunningAppComponent implements OnInit {
 
   }
 
+  openNewPageEditor(): void {
+    const url = '/app/' + this.appService.getAppSlug() + '/page/edit/new';
+    this.router.navigate([ url ]);
+  }
+
 }

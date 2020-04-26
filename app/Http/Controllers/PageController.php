@@ -36,7 +36,12 @@ class PageController extends Controller
         foreach ($page->widgets as &$widget) {
             $widget->saved_x = $widget->x;
             $widget->saved_y = $widget->y;
-            $widget->options = [];
+            
+            if ($widget->options == null) {
+                $widget->options = [];
+            } else {
+                $widget->options = json_decode($widget->options);
+            }
         }
 
         return $this->success($page);
@@ -77,7 +82,8 @@ class PageController extends Controller
             'icon'          => $data['icon'],
             'color'         => $data['color'],
             'created_by'    => $user->id,
-            'last_modified_by' => $user->id
+            'last_modified_by' => $user->id,
+            'parent_page_id'    => null
         ]);
 
         //save the widgets

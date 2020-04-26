@@ -25,6 +25,7 @@ class PageRecordController extends Controller
 
         if ($record == null) {
             $record = new PageRecord();
+            $record->id = -1;
         }
 
         $record->widgets = $widget_values;
@@ -35,15 +36,15 @@ class PageRecordController extends Controller
     public function saveRecord(Request $req) {
         $record_data = $req->input('record');
         $page_id = intval( $req->input('pageId') );
-        $user = AppUser::current();
+        $parent_record_id = intval( $req->input('parentRecordId') );
 
-        $record = PageRecord::create([
-            'page_id'           => $page_id,
-            'created_by'        => $user->id,
-            'last_modified_by'  => $user->id
-        ]);
-
-        return $this->success($record, 'Adatrekord sikeresen elmentve!');
+        //ilyenre kellene átírni minden feldolgozó logikát: controllerben csak try-catch lenne, és minden logikát valami helper v service osztály végezne.
+        try {
+            $record_id = RecordManager::saveRecord($record_data, $page_id, $parent_record_id);
+            return $this->success(['recordId' => $record_id], 'Adatrekord sikeresen elmentve!');
+        } catch(Exception $e) {
+            return $this->fail([], 'Hiba a rekord mentése közben!');
+        }
     }
 
     public function getRecords(Request $req) {
@@ -84,4 +85,5 @@ class PageRecordController extends Controller
 
         return $this->success($data);
     }
+
 }

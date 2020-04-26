@@ -17,7 +17,14 @@
                 <mat-icon matTooltip="Kapcsolódó oldalak" [matMenuTriggerFor]="childPagesMenu" *ngIf="pageModel?.child_pages.length > 0">account_tree</mat-icon>
             </div>
 
-            <div *ngFor="let widget of record.widgets" class="cc-table-cell cc-data-cell">{{ widget.widget_value }}</div>
+            <ng-container *ngFor="let widget of record.widgets">
+                <!-- legördülő mezőnél display_value van -->
+                <div class="cc-table-cell cc-data-cell" *ngIf="widget.widget_type_id === 3">{{ widget.display_value }}</div>
+                <!-- dátum mezők formázva jelennek meg -->
+                <div class="cc-table-cell cc-data-cell" *ngIf="widget.widget_type_id == 4">{{ widget.widget_value | date:'yyyy.MM.dd' }}</div>
+
+                <div class="cc-table-cell cc-data-cell" *ngIf="widget.widget_type_id == 2 || widget.widget_type_id == 1">{{ widget.widget_value }}</div>
+            </ng-container>
         
             <mat-menu #childPagesMenu="matMenu">
                 <button mat-menu-item *ngFor="let childPage of pageModel?.child_pages" [routerLink]="'../../page/' + childPage.id + '/parent-record/' + record.id">

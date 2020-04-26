@@ -5,7 +5,7 @@
         <span matTooltip="Új rekord felvétele" (click)="openNewRecordPage()">
             <mat-icon>add</mat-icon>
         </span>
-        <span matTooltip="Oldal szerkesztése" (click)="openNewPageEditor()">
+        <span matTooltip="Oldal szerkesztése" (click)="openPageEditor()">
             <mat-icon>edit</mat-icon>
         </span>
         <span matTooltip="Oldal nyomtatása">
@@ -13,9 +13,7 @@
         </span>
     </div>
 </nav>
-<main id="list-page-content">
-
-    <!-- ==== táblázat adatokkal - lehet kellene külön komponens neki, ha sok funkciót tud (pl.: szűrés, stb) ==== -->
+<main id="list-page-content" [style.backgroundColor]="page?.color == null ? '#e1eaed' : page?.color">
 
     <div>
         <ccreator-data-table [tableModel]="tableModel" [pageModel]="page" (paginatorChanged)="reloadTable($event)"></ccreator-data-table>

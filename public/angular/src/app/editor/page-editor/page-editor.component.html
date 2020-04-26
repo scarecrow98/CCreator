@@ -64,7 +64,7 @@
             </ng-container>
 
             <!-- listaelemek legördülőbe -->
-            <div>
+            <div *ngIf="selected.widget_type.name == 'select'">
                 <mat-form-field>
                     <mat-label>Listaelem hozzáadása</mat-label>
                     <input type="text" matInput [(ngModel)]="optionValueToAdd">

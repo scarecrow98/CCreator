@@ -52,8 +52,8 @@ export class ListPageComponent implements OnInit {
     this.router.navigate([ url ]);
   }
 
-  openNewPageEditor(): void {
-    const url = '/app/' + this.appService.getAppSlug() + '/page/edit/new';
+  openPageEditor(): void {
+    const url = '/app/' + this.appService.getAppSlug() + '/page/edit/' + this.page.id;
     this.router.navigate([  url ]);
   }
 
