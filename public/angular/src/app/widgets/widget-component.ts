@@ -1,6 +1,6 @@
 import { Component, OnInit, HostBinding, HostListener } from '@angular/core';
 import { Widget } from 'src/app/models/Widget';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl, Validators, FormGroup } from '@angular/forms';
 
 @Component({
     selector: 'widget',
@@ -10,9 +10,7 @@ import { FormControl, Validators } from '@angular/forms';
 export class WidgetComponent implements OnInit {
 
     model: Widget;
-    disabled: boolean = false;
-    errorMessage: string = '';
-    isValid: boolean = true;
+    form: FormGroup;
 
     constructor() { }
 
@@ -20,19 +18,12 @@ export class WidgetComponent implements OnInit {
 
     }
 
-    validate(): void {
-        this.isValid = true;
-        this.errorMessage = '';
+    get validationError() {
+        const error = this.form.controls[this.model.id].errors;
 
-        const required = true;
-        if (required && this.model.widget_value == '' || !this.model.widget_value) {
-            this.isValid = false;
-            this.errorMessage = 'A mezőm kitöltése kötelező';
-        }
+        if (error.required) return 'A widget értéke nem lehet üres!'
+        if (error.min) return `A widget maximum értéke ${this.model.min_value}!`
+        if (error.max) return `A widget maximum értéke ${this.model.max_value}!`
+        return '';
     }
-
-    getErrorMessage(): string {
-        return this.errorMessage;
-    }
-
 }

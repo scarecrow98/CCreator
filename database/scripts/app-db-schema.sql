@@ -30,10 +30,13 @@ create table page_widgets (
     width int not null default 300,
     height int not null default 100,
     default_value varchar(1000),
+    required tinyint default 0,
     x int not null default 0,
     y int not null default 0,
     multi_line tinyint not null default 0,
     options json null,
+    min_value int default null,
+    max_value int default null,
     table_order int default 0
 );
 

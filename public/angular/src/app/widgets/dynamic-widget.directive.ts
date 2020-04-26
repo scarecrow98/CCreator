@@ -4,6 +4,7 @@ import { SelectWidgetComponent } from './components/select-widget-component';
 import { DateWidgetComponent } from './components/date-widget-component';
 import { NumberWidgetComponent } from './components/number-widget-component';
 import { Widget } from '../models/Widget';
+import { FormGroup } from '@angular/forms';
 
 
 
@@ -20,7 +21,7 @@ const componentMap = {
 export class DynamicWidgetDirective implements OnInit {
 
   @Input('model') model: Widget;
-  @Input('disabled') disabled: boolean = false;
+  @Input('form') form: FormGroup;
   componentRef: any;
 
   constructor(
@@ -34,7 +35,7 @@ export class DynamicWidgetDirective implements OnInit {
 
     this.componentRef = this.container.createComponent(factory);
     this.componentRef.instance.model = this.model;
-    this.componentRef.instance.disabled = this.disabled;
+    this.componentRef.instance.form = this.form;
   }
 
 }

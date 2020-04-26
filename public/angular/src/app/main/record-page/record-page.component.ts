@@ -4,6 +4,8 @@ import { RecordService } from 'src/app/services/record.service';
 import { PageService } from 'src/app/services/page.service';
 import { Page } from 'src/app/models/Page';
 import { PageRecord } from 'src/app/models/PageRecord';
+import { FormControl, Validators, FormGroup } from '@angular/forms';
+import { NotificationService } from 'src/app/services/notification.service';
 
 @Component({
   selector: 'app-record-page',
@@ -12,15 +14,17 @@ import { PageRecord } from 'src/app/models/PageRecord';
 })
 export class RecordPageComponent implements OnInit {
 
-  private pageModel: Page = new Page();
-  private recordModel: PageRecord = new PageRecord();
-  private parentRecordId: number = null;
+  public pageModel: Page = new Page();
+  public recordModel: PageRecord = new PageRecord();
+  public parentRecordId: number = null;
+  public formGroup: FormGroup;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private recordService: RecordService,
-    private pageSerice: PageService
+    private pageService: PageService,
+    private notificationService: NotificationService
   ) { }
 
   ngOnInit() {
@@ -29,11 +33,9 @@ export class RecordPageComponent implements OnInit {
       let pageId = params['page-id'];
       this.parentRecordId = params['parent-record-id'] ?  parseInt(params['parent-record-id']) : null;
 
-      this.pageSerice.getPage(pageId).subscribe(resp => {
+      this.pageService.getPage(pageId).subscribe(resp => {
         if (resp.status) {
           this.pageModel = <Page>resp.data;
-        } else {
-          //todo: error
         }
       });
 
@@ -42,6 +44,7 @@ export class RecordPageComponent implements OnInit {
       this.recordService.getRecord(parseInt(pageId), parseInt(recordId)).subscribe(resp => {
         if (resp.status) {
           this.recordModel = <PageRecord> resp.data;
+          this.formGroup = this.makeFormGroup();
         }
       });
 
@@ -49,6 +52,11 @@ export class RecordPageComponent implements OnInit {
   }
 
   saveRecord(): void {
+    if (this.formGroup.invalid) {
+      this.notificationService.error('A widgetek értékei nem felelnek meg a widgetek megkötéseinek!');
+      return;
+    }
+
     this.recordService.saveRecord(this.pageModel.id, this.recordModel, this.parentRecordId).subscribe(resp => {
       if (resp.status) {
         this.router.navigate(['../' + resp.data.recordId], { relativeTo: this.route });
@@ -56,14 +64,42 @@ export class RecordPageComponent implements OnInit {
     });
   }
 
-  hexToRgba(hex: string, alpha: number): string {
-    if (!hex || hex == '') {
-        return 'rgba(255,255,255, 1.0)';
+  closeRecordPage(): void {
+    if (this.formGroup.dirty) {
+      this.notificationService.confirm('A rekord adatain változás történt. Ha kilépsz, a módosítások nem kerülnek mentésre. Biztosan kilépsz?').subscribe(ans => {
+        if (ans) {
+          this.router.navigate(['../../'], { relativeTo: this.route });
+        }
+      });
+      return;
     }
-    const r = parseInt(hex.slice(1, 3), 16);
-    const g = parseInt(hex.slice(3, 5), 16);
-    const b = parseInt(hex.slice(5, 7), 16);
+    this.router.navigate(['../../'], { relativeTo: this.route });
+  }
 
-    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  makeFormGroup() {
+    let group: any = {};
+    for (let widget of this.recordModel.widgets) {
+      let formControl = new FormControl(widget.widget_value);
+      //validátorok készítése a widgethez
+
+      let validators = [];
+
+      if (widget.required) {
+        validators.push(Validators.required);
+      }
+
+      if (widget.min_value != null) {
+        validators.push(Validators.min(widget.min_value));
+      }
+
+      if (widget.max_value != null) {
+        validators.push(Validators.max(widget.max_value));
+      }
+      
+      formControl.setValidators(validators);
+      group[widget.id] = formControl;
+    };
+
+    return new FormGroup(group);
   }
 }

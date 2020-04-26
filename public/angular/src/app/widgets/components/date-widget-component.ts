@@ -5,12 +5,15 @@ import { Widget } from 'src/app/models/Widget';
 @Component({
     selector: 'date-widget',
     template: `
-        <mat-form-field appearance="fill" floatLabel="always">
-            <mat-label>{{ model.label }}</mat-label>
-            <input matInput [matDatepicker]="picker" [disabled]="disabled" [(ngModel)]="model.widget_value">
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
+        <div [formGroup]="form">
+            <mat-form-field appearance="fill" floatLabel="always">
+                <mat-label>{{ model.label }}</mat-label>
+                <input matInput [matDatepicker]="picker" [(ngModel)]="model.widget_value" [formControlName]="model.id.toString()">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                <mat-error *ngIf="form?.controls[model.id.toString()]?.invalid">{{ validationError }}</mat-error>
+            </mat-form-field>
+        </div>
   `,
     styles: []
 })
