@@ -1,7 +1,7 @@
 <div id="app" [ngClass]="{
     'no-sidebar': router.url.includes('page/edit/')
-}">
-    <ng-container>
+}">    
+    <ng-container *ngIf="!router.url.includes('page/edit/')">
         <aside id="app-sidebar">
 
             <div class="app-info">
@@ -20,12 +20,18 @@
             </section>
 
             <section class="nav-section">
-                <h2 class="nav-section-title">Alkalmazás</h2>
+                <h2 class="nav-section-title">Oldalak</h2>
+                <button mat-raised-button color="primary" (click)="openNewPageEditor()">
+                    <mat-icon>library_add</mat-icon>
+                    Oldal létrehozása
+                </button>
 
-                <div class="nav-item" *ngFor="let page of pages" [routerLink]="'page/' + page.id">
-                    <mat-icon>list</mat-icon>
-                    <span>{{ page.title }}</span>
-                </div>
+                <ng-container  *ngFor="let page of pages">
+                    <div *ngIf="page?.parent_page_id === null" class="nav-item" [routerLink]="'page/' + page.id">
+                        <mat-icon>list</mat-icon>
+                        <span>{{ page.title }}</span>
+                    </div>
+                </ng-container>
             </section>
 
             
@@ -44,6 +50,8 @@
 
         </aside>
     </ng-container>
+
+
     <main id="app-content">
         <router-outlet></router-outlet>
     </main>

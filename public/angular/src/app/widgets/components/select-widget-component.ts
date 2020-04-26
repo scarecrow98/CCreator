@@ -8,11 +8,8 @@ import { SelectOption } from 'src/app/models/SelectOption';
     template: `
         <mat-form-field style="width: 180px" appearance="fill"  floatLabel="always">
             <mat-label>{{ model.label }}</mat-label>
-            <mat-select placeholder="Válassz egy opciót" [disabled]="disabled"> 
-                <mat-option value="1">1</mat-option>  
-                <mat-option value="2">2</mat-option>  
-                <mat-option value="3">3</mat-option>  
-                <mat-option value="4">4</mat-option>  
+            <mat-select placeholder="Válassz egy opciót" [disabled]="disabled" [(ngModel)]="model.widget_value"> 
+                <mat-option *ngFor="let option of model.options" [value]="option.key.toString()">{{ option.value }}</mat-option>  
             </mat-select>   
         </mat-form-field>
   `,
@@ -25,6 +22,9 @@ export class SelectWidgetComponent extends WidgetComponent implements OnInit {
     }
 
     ngOnInit() {
+        if (!Array.isArray(this.model.options)) {
+            this.model.options = JSON.parse(this.model.options);
+        }
     }
 
     addOption(value: string): void {

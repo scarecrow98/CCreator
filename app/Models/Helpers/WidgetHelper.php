@@ -21,6 +21,7 @@ class WidgetHelper {
         $widget->x = $widget_data['x'];
         $widget->y = $widget_data['y'];
         $widget->multi_line = $widget_data['multi_line'];
+        $widget->options = empty($widget_data) ? null : json_encode($widget_data['options']);
 
         $widget->save();
     }

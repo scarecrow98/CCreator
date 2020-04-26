@@ -14,6 +14,7 @@ export class RecordPageComponent implements OnInit {
 
   private pageModel: Page = new Page();
   private recordModel: PageRecord = new PageRecord();
+  private parentRecordId: number = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -26,6 +27,7 @@ export class RecordPageComponent implements OnInit {
     this.route.params.subscribe(params => {
       let recordId = params['record-id'];
       let pageId = params['page-id'];
+      this.parentRecordId = params['parent-record-id'] ?  parseInt(params['parent-record-id']) : null;
 
       this.pageSerice.getPage(pageId).subscribe(resp => {
         if (resp.status) {
@@ -47,9 +49,9 @@ export class RecordPageComponent implements OnInit {
   }
 
   saveRecord(): void {
-    this.recordService.saveRecord(this.pageModel.id, this.recordModel).subscribe(resp => {
+    this.recordService.saveRecord(this.pageModel.id, this.recordModel, this.parentRecordId).subscribe(resp => {
       if (resp.status) {
-        this.router.navigate(['../' + resp.data.id], { relativeTo: this.route });
+        this.router.navigate(['../' + resp.data.recordId], { relativeTo: this.route });
       }
     });
   }

@@ -15,8 +15,8 @@ export class RecordService {
     return this.http.post<ApiResponse>('/app/record/getRecord', { pageId, recordId });
   }
 
-  saveRecord(pageId: number, record: PageRecord): Observable<ApiResponse> {
-    return this.http.post<ApiResponse>('/app/record/saveRecord', { record, pageId });
+  saveRecord(pageId: number, record: PageRecord, parentRecordId: number): Observable<ApiResponse> {
+    return this.http.post<ApiResponse>('/app/record/saveRecord', { record, pageId, parentRecordId });
   }
 
   getRecords(pageId: number, parentRecordId: number, pageInfo: any): Observable<ApiResponse> {
