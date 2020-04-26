@@ -26,18 +26,19 @@
         (click)="selected = null" #editorViewport>
 
         <!-- widgetek -->
+        <ng-container *ngIf="pageModelLoaded">
+            <ng-container *ngFor="let widget of pageModel?.widgets">
+                <div *ngIf="!widget.deleted" style="position: absolute; transform-origin: top left;" [style.top.px]="widget.saved_y"
+                [style.left.px]="widget.saved_x" cdkDrag (cdkDragEnded)="widgetDragged($event, widget)">
 
-        <ng-container *ngFor="let widget of pageModel?.widgets">
-            <div *ngIf="!widget.deleted" style="position: absolute; transform-origin: top left;" [style.top.px]="widget.saved_y"
-            [style.left.px]="widget.saved_x" cdkDrag (cdkDragEnded)="widgetDragged($event, widget)">
-
-                <div class="widget-wrapper">
-                    <div class="widget-selection-box" [ngClass]="{ 'selected': widget.id == selected?.id }"
-                        (click)="selected = widget; $event.stopPropagation()">
-                        <ng-container dynamicWidget [model]="widget" [disabled]="true"></ng-container>
+                    <div class="widget-wrapper">
+                        <div class="widget-selection-box" [ngClass]="{ 'selected': widget.id == selected?.id }"
+                            (click)="selected = widget; $event.stopPropagation()">
+                            <ng-container dynamicWidget [model]="widget" [form]="emptyFormGroup"></ng-container>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </ng-container>
         </ng-container>
         
 
@@ -53,15 +54,19 @@
             </h2>
 
             <mat-form-field>
-                <mat-label>Név</mat-label>
+                <mat-label>Widget felirata</mat-label>
                 <input type="text" matInput [(ngModel)]="selected.label">
             </mat-form-field>
 
-            <ng-container *ngIf="selected.widget_type.name == 'textarea'">
+            <div *ngIf="selected.widget_type.name == 'textarea'">
                 <mat-checkbox [(ngModel)]="selected.multi_line">
                     Többsoros szövegdoboz
                 </mat-checkbox>
-            </ng-container>
+            </div>
+
+            <div>
+                <mat-checkbox [(ngModel)]="selected.required">Kötelezően kitöltendő</mat-checkbox>
+            </div>
 
             <!-- listaelemek legördülőbe -->
             <div *ngIf="selected.widget_type.name == 'select'">
@@ -80,7 +85,7 @@
             </div>
 
             <!-- alapértelmezett értékek -->
-            <div>
+            <div *ngIf="!selected.required">
                 <mat-form-field *ngIf="selected.widget_type.name == 'number'">
                     <mat-label>Alapértelmezett érték</mat-label>
                     <input type="number" matInput [(ngModel)]="selected.default_value">
@@ -92,6 +97,18 @@
                 <mat-form-field *ngIf="selected.widget_type.name == 'date'">
                     <mat-label>Alapértelmezett érték</mat-label>
                     <input type="date" matInput [(ngModel)]="selected.default_value">
+                </mat-form-field>
+            </div>
+
+            <!-- min és max értékek számmezőnél -->
+            <div *ngIf="selected.widget_type.name == 'number'">
+                <mat-form-field>
+                    <mat-label>Minimális érték</mat-label>
+                    <input matInput type="number" [(ngModel)]="selected.min_value">
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Maximális érték</mat-label>
+                    <input matInput type="number" [(ngModel)]="selected.max_value">
                 </mat-form-field>
             </div>
         </section>
@@ -127,7 +144,7 @@
                         <mat-select [(ngModel)]="relatedPageIdToAdd">
                             <ng-container *ngFor="let page of pages">
                                 <mat-option *ngIf="canPageBeRelated(page)" [value]="page.id">
-                                    {{ page.title }}
+                                    {{ page?.title }}
                                 </mat-option>
                             </ng-container>   
                         </mat-select> 
@@ -147,7 +164,7 @@
                 <div>
                     <h3>Alárendelt oldalak:</h3>
                     <ul>
-                        <li *ngFor="let page of pageModel?.child_pages">{{ page.title }}</li>
+                        <li *ngFor="let page of pageModel?.child_pages">{{ page?.title }}</li>
                     </ul>
                 </div>
 

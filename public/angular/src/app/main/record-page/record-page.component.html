@@ -14,7 +14,7 @@
         <span matTooltip="Rekord nyomtatása">
             <mat-icon>print</mat-icon>
         </span>
-        <span matTooltip="Oldal bezárása" [routerLink]="'../../'">
+        <span matTooltip="Oldal bezárása" (click)="closeRecordPage()">
             <mat-icon>close</mat-icon>
         </span>
 
@@ -52,7 +52,7 @@
                 <mat-icon class="widget-notif-icon nonexistent-value" *ngIf="!widget.value_exists"
                     matTooltip="Ezen mező értéke nem létezik az adatbázisban, így alapértelmezett értéket használ.">error</mat-icon>
 
-                <ng-container dynamicWidget [model]="widget" [disabled]="false"></ng-container>
+                <ng-container dynamicWidget [model]="widget" [form]="formGroup"></ng-container>
             </div>
         </div>
     </div>

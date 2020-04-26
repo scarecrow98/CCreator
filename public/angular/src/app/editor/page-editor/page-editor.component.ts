@@ -10,6 +10,7 @@ import { DynamicWidgetDirective } from 'src/app/widgets/dynamic-widget.directive
 import { NotificationService } from 'src/app/services/notification.service';
 import { CdkDragEnd } from '@angular/cdk/drag-drop';
 import { SelectOption } from 'src/app/models/SelectOption';
+import { FormGroup, FormControl, FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-page-editor',
@@ -29,6 +30,8 @@ export class PageEditorComponent implements OnInit, AfterViewInit {
 
   public relatedPageIdToAdd: number = null;
   public optionValueToAdd: string = null;
+  public emptyFormGroup: FormGroup;
+  public pageModelLoaded: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -38,6 +41,8 @@ export class PageEditorComponent implements OnInit, AfterViewInit {
   ) { }
 
   ngOnInit() {
+    this.pageModelLoaded = false;
+
     //ha új page-t hozok létre, akkor csak csinálok egy új page objektumot,
     //ha szerkesztek egy page-t, akkor lekérem az adatait a serviccel
     this.createMode = this.route.snapshot.paramMap.get('page-id') == 'new';
@@ -45,6 +50,9 @@ export class PageEditorComponent implements OnInit, AfterViewInit {
     if (!this.createMode) {
       const pageId = parseInt(this.route.snapshot.paramMap.get('page-id'));
       this.loadPage(pageId);
+    } else {
+      this.pageModelLoaded = true;
+      this.emptyFormGroup = this.getEmptyFormGroup();
     }
 
     //elérehető widget típusok lekérése
@@ -55,14 +63,7 @@ export class PageEditorComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    // this.widgetComponents.changes.subscribe(res => {
-    //   const elems = res.toArray();
 
-    //   for (let elem of elems) {
-    //     const component = elem.componentRef.instance;
-    //     component.talk();
-    //   }
-    // });
   }
 
   savePage(): void {
@@ -93,6 +94,11 @@ export class PageEditorComponent implements OnInit, AfterViewInit {
     widget.y = widget.saved_y = widgetY;
     widget.id = - (this.pageModel.widgets.length + 1);
     widget.page_id = this.pageModel.id;
+
+    let formControl = new FormControl('');
+    formControl.disable();
+    this.emptyFormGroup.addControl(widget.id.toString(), formControl);
+
     this.pageModel.widgets.push(widget);
   }
 
@@ -161,8 +167,8 @@ export class PageEditorComponent implements OnInit, AfterViewInit {
     this.pageService.getPage(pageId).subscribe(resp => {
       if (resp.status) {
         this.pageModel = <Page>resp.data;
-      } else {
-        console.log(resp.message); //todo
+        this.emptyFormGroup = this.getEmptyFormGroup();
+        this.pageModelLoaded = true;
       }
     });
   }
@@ -183,6 +189,17 @@ export class PageEditorComponent implements OnInit, AfterViewInit {
         this.pages = <Array<Page>>resp.data;
       }
     });
+  }
+
+  getEmptyFormGroup() {
+    let group: any = {};
+    for (let widget of this.pageModel.widgets) {
+      let formControl = new FormControl('');
+      formControl.disable();
+      group[widget.id] = formControl;
+    };
+
+    return new FormGroup(group);
   }
 
 }

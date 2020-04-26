@@ -6,12 +6,15 @@ import { SelectOption } from 'src/app/models/SelectOption';
 @Component({
     selector: 'select-widget',
     template: `
-        <mat-form-field style="width: 180px" appearance="fill"  floatLabel="always">
-            <mat-label>{{ model.label }}</mat-label>
-            <mat-select placeholder="Válassz egy opciót" [disabled]="disabled" [(ngModel)]="model.widget_value"> 
-                <mat-option *ngFor="let option of model.options" [value]="option.key.toString()">{{ option.value }}</mat-option>  
-            </mat-select>   
-        </mat-form-field>
+        <div [formGroup]="form">
+            <mat-form-field style="width: 180px" appearance="fill"  floatLabel="always">
+                <mat-label>{{ model.label }}</mat-label>
+                <mat-select placeholder="Válassz egy opciót" [(ngModel)]="model.widget_value" [formControlName]="model.id.toString()"> 
+                    <mat-option *ngFor="let option of model.options" [value]="option.key.toString()">{{ option.value }}</mat-option>  
+                </mat-select>
+                <mat-error *ngIf="form?.controls[model.id.toString()]?.invalid">{{ validationError }}</mat-error>   
+            </mat-form-field>
+        </div>
   `,
     styles: []
 })
