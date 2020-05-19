@@ -6,6 +6,7 @@ import { Page } from 'src/app/models/Page';
 import { PageRecord } from 'src/app/models/PageRecord';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { NotificationService } from 'src/app/services/notification.service';
+import { PrintService } from 'src/app/services/print.service';
 
 @Component({
   selector: 'app-record-page',
@@ -24,7 +25,8 @@ export class RecordPageComponent implements OnInit {
     private router: Router,
     private recordService: RecordService,
     private pageService: PageService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private printService: PrintService
   ) { }
 
   ngOnInit() {
@@ -51,6 +53,12 @@ export class RecordPageComponent implements OnInit {
     });
   }
 
+  printPageRecord(): void {
+    // this.printService.printPageRecord(this.pageModel.id, this.recordModel.id).subscribe(resp => {
+    //   console.log(resp);
+    // });
+  }
+
   saveRecord(): void {
     if (this.formGroup.invalid) {
       this.notificationService.error('A widgetek értékei nem felelnek meg a widgetek megkötéseinek!');
@@ -59,6 +67,7 @@ export class RecordPageComponent implements OnInit {
 
     this.recordService.saveRecord(this.pageModel.id, this.recordModel, this.parentRecordId).subscribe(resp => {
       if (resp.status) {
+        this.formGroup.markAsPristine();
         this.router.navigate(['../' + resp.data.recordId], { relativeTo: this.route });
       }
     });

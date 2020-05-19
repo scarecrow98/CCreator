@@ -8,7 +8,7 @@
         <span matTooltip="Oldal szerkesztése" (click)="openPageEditor()">
             <mat-icon>edit</mat-icon>
         </span>
-        <span matTooltip="Oldal nyomtatása">
+        <span matTooltip="Oldal nyomtatása" (click)="printPage()">
             <mat-icon>print</mat-icon>
         </span>
     </div>
@@ -16,7 +16,7 @@
 <main id="list-page-content" [style.backgroundColor]="page?.color == null ? '#e1eaed' : page?.color">
 
     <div>
-        <ccreator-data-table [tableModel]="tableModel" [pageModel]="page" (paginatorChanged)="reloadTable($event)"></ccreator-data-table>
+        <ccreator-data-table #dataTable [tableModel]="tableModel" [pageModel]="page" (paginatorChanged)="reloadTable($event)"></ccreator-data-table>
     </div>
 
 </main>

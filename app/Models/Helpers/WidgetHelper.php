@@ -23,8 +23,8 @@ class WidgetHelper {
         $widget->multi_line = $widget_data['multi_line'];
         $widget->options = empty($widget_data) ? null : json_encode($widget_data['options']);
         $widget->required = $widget_data['required'];
-        $widget->min_value = intval( $widget_data['min_value'] );
-        $widget->max_value = intval( $widget_data['max_value'] );
+        $widget->min_value = is_null( $widget_data['min_value'] ) ? null : intval( $widget_data['min_value'] );
+        $widget->max_value = is_null( $widget_data['max_value'] ) ? null : intval( $widget_data['max_value'] );
 
         $widget->save();
     }

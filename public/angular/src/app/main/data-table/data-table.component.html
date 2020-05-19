@@ -8,7 +8,7 @@
             <div *ngFor="let header of pageModel?.widgets" class="cc-table-header-cell cc-table-cell" >{{ header.label }}</div>
         </div>
 
-        <div class="cc-table-row cc-data-row" *ngFor="let record of _tableModel?.records">
+        <div class="cc-table-row cc-data-row" *ngFor="let record of tableModel?.records">
             <div class="cc-row-actions cc-table-cell">
                 <mat-icon matTooltip="Rekord szerkeszőt megnyitása" *ngIf="!record.parent_record_id" (click)="openRecordPage(record.id, record.parent_record_id)">edit</mat-icon>
                 <mat-icon matTooltip="Rekord szerkeszőt megnyitása" *ngIf="record.parent_record_id" (click)="openRecordPage(record.id, record.parent_record_id)">edit</mat-icon>
@@ -37,7 +37,7 @@
 
     <div class="cc-table-paginator">
         <div class="cc-paginator-info">
-            Összesen: {{ _tableModel.total }} rekord
+            Összesen: {{ tableModel.total }} rekord
         </div>
         
         <div class="cc-page-size">

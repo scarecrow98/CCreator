@@ -13,7 +13,8 @@ export class ApiInterceptor implements HttpInterceptor {
     /**
      * Lumen API címe
      */
-    private apiUrl: string = 'http://localhost:8000';
+    private apiUrl: string = 'https://rf.govern.hu/api/public';
+    // private apiUrl: string = 'http://localhost:8000';
 
     /**
      * Elküldött, de még vissza nem érkezett kérések száma.

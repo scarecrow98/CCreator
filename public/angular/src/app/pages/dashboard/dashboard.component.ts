@@ -30,20 +30,24 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  openNewAppDialog(): void {
-    const dialogRef = this.matDialog.open(AppEditorComponent, {
-      width: '60%',
-      height: '80%'
-    });
+  openAppEditDialog(app: Application = null): void {
+    this.notificationService.error('Ez a funkció jelenleg nem elérhető!');
+    
+    // const dialogRef = this.matDialog.open(AppEditorComponent, {
+    //   width: '60%',
+    //   height: '80%'
+    // });
   }
 
   initDeleteApp(app: Application): void {
-    const msg = `Biztosan törölni szeretnéd a(z) ${app.name} nevű alkalmazást? A törlés nem visszavonható művelet!`;
-    this.notificationService.confirm(msg).subscribe(ans => {
-      if (ans === true) {
-        this.deleteApp(app.id);
-      }
-    });
+    this.notificationService.error('Ez a funkció jelenleg nem elérhető!');
+
+    // const msg = `Biztosan törölni szeretnéd a(z) ${app.name} nevű alkalmazást? A törlés nem visszavonható művelet!`;
+    // this.notificationService.confirm(msg).subscribe(ans => {
+    //   if (ans === true) {
+    //     this.deleteApp(app.id);
+    //   }
+    // });
   }
 
   deleteApp(appId: number) {

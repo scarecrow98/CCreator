@@ -1,6 +1,6 @@
 <nav class="page-nav">
     <h1>{{ pageModel.title }}</h1>
-    <span [style.color]="pageModel?.color">asd</span>
+    <span [style.backgroundColor]="pageModel?.color" class="page-editor-color-circle"></span>
 
     <div class="page-nav-toolbar">
         <span matTooltip="Oldal mentése" (click)="savePage()">
@@ -126,14 +126,18 @@
                     <span>{{ pageModel?.last_modified_by?.display_name }}</span>
                 </div>
 
-                <mat-form-field>
-                    <mat-label>Oldal címe</mat-label>
-                    <input type="text" matInput [(ngModel)]="pageModel.title">
-                </mat-form-field>
-                <mat-form-field>
-                    <mat-label>Szín</mat-label>
-                    <input type="color" matInput [(ngModel)]="pageModel.color">
-                </mat-form-field>
+                <div>
+                    <mat-form-field>
+                        <mat-label>Oldal címe</mat-label>
+                        <input type="text" matInput [(ngModel)]="pageModel.title">
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field>
+                        <mat-label>Szín</mat-label>
+                        <input type="color" matInput [(ngModel)]="pageModel.color">
+                    </mat-form-field>
+                </div>
             </mat-tab>
 
             <!-- oldalhierarchia szerkesztő -->
@@ -172,7 +176,7 @@
             </mat-tab>
 
             <!-- widgetek táblázat beállításai -->
-            <mat-tab label="Widgetek">
+            <!-- <mat-tab label="Widgetek">
                 <h2>Widgetek sorrendje a táblázatban</h2>
                 <div class="widget-table-list">
                     <div class="widget-table-item" *ngFor="let widget of pageModel?.widgets">
@@ -182,7 +186,7 @@
                         </div>
                     </div>
                 </div>
-            </mat-tab>
+            </mat-tab> -->
 
         </mat-tab-group>
 

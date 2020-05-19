@@ -56,22 +56,20 @@ class PageRecordController extends Controller
         $data['page'] = $page;
         $data['table_model']['records'] = [];
 
+        //ha van megadva szülőrekord id, akkor szűkitjük annak a gyerekeire
+        $record_set = $page->records();
+        if ($req->input('parentRecordId') != null) {
+            $parent_record_id = intval( $req->input('parentRecordId') );
+            $record_set = $record_set->where('parent_record_id', $parent_record_id);
+        }
+
         //van-e pagination?
         if ($req->has('pageInfo')) {
             $page_info = $req->input('pageInfo');
             $current_page = intval($page_info['pageNumber']) - 1;
             $page_size = intval($page_info['pageSize']);
             // return response()->json([ $current_page, $page_size ]);
-            $record_set = $page->records()->skip($current_page * $page_size)->take($page_size);
-        } else {
-            //összes rekord
-            $record_set = $page->records();
-        }
-
-        //ha van megadva szülőrekord id, akkor szűkitjük annak a gyerekeire
-        if ($req->input('parentRecordId') != null) {
-            $parent_record_id = intval( $req->input('parentRecordId') );
-            $record_set = $record_set->where('parent_record_id', $parent_record_id);
+            $record_set = $record_set->skip($current_page * $page_size)->take($page_size);
         }
 
         $records = $record_set->get();

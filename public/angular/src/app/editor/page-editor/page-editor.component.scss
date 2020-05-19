@@ -48,6 +48,14 @@
     }
 }
 
+.page-editor-color-circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 15px;
+}
+
 #widget-list-container {
     display: grid;
     grid-template-columns: 1fr 1fr;

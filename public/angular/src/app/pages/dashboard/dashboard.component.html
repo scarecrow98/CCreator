@@ -11,7 +11,7 @@
             <a routerLink="/dashboard">
                 <h1>CCreator</h1>
             </a>
-            <button mat-raised-button (click)="openNewAppDialog()">
+            <button mat-raised-button (click)="openAppEditDialog()">
                 <mat-icon>add</mat-icon>
                 Új alkalmazás létrehozása
             </button>
@@ -28,7 +28,7 @@
                         <mat-icon>play_arrow</mat-icon>
                     </a>
 
-                    <mat-icon class="app-box-edit" matTooltip="Alkalmazás szerkesztése">edit</mat-icon>
+                    <mat-icon class="app-box-edit" matTooltip="Alkalmazás szerkesztése" (click)="openAppEditDialog(app)">edit</mat-icon>
                     <mat-icon class="app-box-delete" matTooltip="Alkalmazás törlése" (click)="initDeleteApp(app)">delete</mat-icon>
                 </div>
 

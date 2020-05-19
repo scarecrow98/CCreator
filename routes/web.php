@@ -28,8 +28,8 @@ $router->group(['prefix' => 'account'], function() use($router) {
 
 $router->group(['prefix' => 'dashboard', 'middlewate' => 'auth'], function() use($router) {
     $router->get('getApps', 'DashboardController@getApps');
-    $router->post('createApp', 'ApplicationController@createApp');
-    $router->post('deleteApp', 'ApplicationController@deleteApp');
+    //$router->post('createApp', 'ApplicationController@createApp');
+    //$router->post('deleteApp', 'ApplicationController@deleteApp');
 });
 
 $router->group(['prefix' => 'app', 'middleware' => ['auth', 'appDb']], function() use($router) {
@@ -52,4 +52,8 @@ $router->group(['prefix' => 'app', 'middleware' => ['auth', 'appDb']], function(
 
     //user
     $router->get('/user/currentLocalUser', 'AccountController@currentLocalUser');
+
+    //printing
+    $router->post('/print/printPageRecord', 'PrintController@printPageRecord');
+    $router->post('/print/printPage', 'PrintController@printPage');
 });

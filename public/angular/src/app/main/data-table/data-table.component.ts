@@ -17,6 +17,9 @@ export class DataTableComponent implements OnInit {
     this._tableModel = value;
     this.refreshPaginator();
   }
+  get tableModel() {
+    return this._tableModel;
+  }
 
   @Output('paginatorChanged') paginatorChanged: EventEmitter<any> = new EventEmitter();
 
@@ -41,12 +44,16 @@ export class DataTableComponent implements OnInit {
     });
   }
 
+  get pageInfo() {
+    return { pageSize: this.currentPageSize, pageNumber: this.currentPageNumber }
+  }
+
   refreshPaginator(): void {
     this.pageCount = Math.ceil(this._tableModel.total / this.currentPageSize);
     this.pageNumbers = Array(this.pageCount).fill(0).map((x, i) => i + 1);
   }
 
-  paginatorChangedHandler(): void {
+  paginatorChangedHandler(event: any = null): void {
     this.refreshPaginator();
 
     if (this.currentPageNumber > this.pageCount) {

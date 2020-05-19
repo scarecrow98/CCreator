@@ -11,7 +11,7 @@
         <span matTooltip="Információ" [matMenuTriggerFor]="recordInfoMenu">
             <mat-icon>info</mat-icon>
         </span>
-        <span matTooltip="Rekord nyomtatása">
+        <span matTooltip="Rekord nyomtatása" (click)="printPageRecord()">
             <mat-icon>print</mat-icon>
         </span>
         <span matTooltip="Oldal bezárása" (click)="closeRecordPage()">

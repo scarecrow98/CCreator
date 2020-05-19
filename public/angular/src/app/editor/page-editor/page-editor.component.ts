@@ -67,6 +67,11 @@ export class PageEditorComponent implements OnInit, AfterViewInit {
   }
 
   savePage(): void {
+    if (!this.pageModel.title || this.pageModel.title == '') {
+      this.notificationService.error('Nem adtad meg az oldal nevét!');
+      return;
+    }
+
     this.pageService.savePage(this.pageModel).subscribe(resp => {
       if (resp.status) {
         const pageId = resp.data.pageId;
