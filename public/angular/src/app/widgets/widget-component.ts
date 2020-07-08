@@ -1,6 +1,8 @@
-import { Component, OnInit, HostBinding, HostListener } from '@angular/core';
+import { Component, OnInit, HostBinding, HostListener, Input } from '@angular/core';
 import { Widget } from 'src/app/models/Widget';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'widget',
@@ -11,11 +13,21 @@ export class WidgetComponent implements OnInit {
 
     model: Widget;
     form: FormGroup;
+    @Input() valueSubject: Subject<any>;
 
-    constructor() { }
+
+    constructor() {
+    }
 
     ngOnInit() {
 
+    }
+
+    protected broadcastValueChange(): void {
+        this.valueSubject.next({
+            value: this.model.widget_value,
+            sender: this.model.id
+        });
     }
 
     get validationError() {

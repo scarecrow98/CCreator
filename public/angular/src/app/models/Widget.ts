@@ -16,7 +16,7 @@ export class Widget {
     min_value: number = null;
     max_value: number = null;
 
-    widget_value: string = null;
+    widget_value: any = null;
     value_exists: boolean = false;
 
     saved_x: number = 0;

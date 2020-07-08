@@ -6,6 +6,7 @@ import { Page } from 'src/app/models/Page';
 import { PageRecord } from 'src/app/models/PageRecord';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { NotificationService } from 'src/app/services/notification.service';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-record-page',
@@ -18,6 +19,7 @@ export class RecordPageComponent implements OnInit {
   public recordModel: PageRecord = new PageRecord();
   public parentRecordId: number = null;
   public formGroup: FormGroup;
+  public valueSubject: Subject<any> = new Subject<any>()
 
   constructor(
     private route: ActivatedRoute,
@@ -98,8 +100,14 @@ export class RecordPageComponent implements OnInit {
       
       formControl.setValidators(validators);
       group[widget.id] = formControl;
-    };
 
-    return new FormGroup(group);
+    };
+    let formGroup = new FormGroup(group);
+
+    // formGroup.valueChanges.subscribe(x => {
+    //   console.log(x);
+    // });
+
+    return formGroup;
   }
 }

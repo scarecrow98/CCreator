@@ -5,6 +5,7 @@ import { DateWidgetComponent } from './components/date-widget-component';
 import { NumberWidgetComponent } from './components/number-widget-component';
 import { Widget } from '../models/Widget';
 import { FormGroup } from '@angular/forms';
+import { Subject } from 'rxjs';
 
 
 
@@ -22,6 +23,7 @@ export class DynamicWidgetDirective implements OnInit {
 
   @Input('model') model: Widget;
   @Input('form') form: FormGroup;
+  @Input('valueSubject') valueSubject: Subject<any>;
   componentRef: any;
 
   constructor(
@@ -36,6 +38,7 @@ export class DynamicWidgetDirective implements OnInit {
     this.componentRef = this.container.createComponent(factory);
     this.componentRef.instance.model = this.model;
     this.componentRef.instance.form = this.form;
+    this.componentRef.instance.valueSubject = this.valueSubject;
   }
 
 }

@@ -52,7 +52,7 @@
                 <mat-icon class="widget-notif-icon nonexistent-value" *ngIf="!widget.value_exists"
                     matTooltip="Ezen mező értéke nem létezik az adatbázisban, így alapértelmezett értéket használ.">error</mat-icon>
 
-                <ng-container dynamicWidget [model]="widget" [form]="formGroup"></ng-container>
+                <ng-container dynamicWidget [model]="widget" [form]="formGroup" [valueSubject]="valueSubject"></ng-container>
             </div>
         </div>
     </div>
